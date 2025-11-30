@@ -33,6 +33,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Initialize
+        id: init
         uses: spotdemo4/nix-init@a4440ed9daa3faedcfc8cd491dbcfa5e38d84156 # v1.8.14
         with:
           shell: release
@@ -40,14 +41,47 @@ jobs:
       - name: Get package info
         id: package
         run: |
-          SYSTEM=$(nix eval --impure --raw --expr 'builtins.currentSystem')
-          echo "system=${SYSTEM}" >> $GITHUB_OUTPUT
-
-          NAME=$(nix eval --raw .#packages."${SYSTEM}".default.name)
-          echo "name=${NAME}-${SYSTEM}" >> $GITHUB_OUTPUT
+          NAME=$(nix eval --raw .#packages."${{ steps.init.outputs.system }}".default.name)
+          echo "name=${NAME}-${{ steps.init.outputs.system }}" >> $GITHUB_OUTPUT
 
       - name: Build
         run: nix build
+
+      - name: Export build
+        run: nix nario export --format 2 --recursive > "${{ steps.init.outputs.system }}.nario"
+
+      - name: Upload build
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        with:
+          name: ${{ steps.init.outputs.system }}
+          path: ${{ steps.init.outputs.system }}.nario
+
+  build-static:
+    needs: build
+    strategy:
+      matrix:
+        os: [ubuntu-24.04, ubuntu-24.04-arm, macos-15]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Initialize
+        id: init
+        uses: spotdemo4/nix-init@a4440ed9daa3faedcfc8cd491dbcfa5e38d84156 # v1.8.14
+        with:
+          shell: release
+
+      - name: Get package info
+        id: package
+        run: |
+          NAME=$(nix eval --raw .#packages."${{ steps.init.outputs.system }}".default.name)
+          echo "name=${NAME}-${{ steps.init.outputs.system }}" >> $GITHUB_OUTPUT
+
+      - name: Download build
+        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+        with:
+          name: ${{ steps.init.outputs.system }}
+
+      - name: Import build
+        run: nix nario import --no-check-sigs < "${{ steps.init.outputs.system }}.nario"
 
       - name: Bundle
         run: nix bundle --bundler github:DavHau/nix-portable#zstd-max -o result
@@ -64,23 +98,15 @@ jobs:
         with:
           files: ${{ steps.package.outputs.name }}
 
-      - name: Export build
-        run: nix nario export --format 2 --recursive > "${{ steps.package.outputs.system }}.nario"
-
-      - name: Upload build
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
-        with:
-          name: ${{ steps.package.outputs.system }}
-          path: ${{ steps.package.outputs.system }}.nario
-
   build-deb:
+    needs: build
     strategy:
       matrix:
         os: [ubuntu-24.04, ubuntu-24.04-arm]
-    needs: build
     runs-on: ${{ matrix.os }}
     steps:
       - name: Initialize
+        id: init
         uses: spotdemo4/nix-init@a4440ed9daa3faedcfc8cd491dbcfa5e38d84156 # v1.8.14
         with:
           shell: release
@@ -88,19 +114,16 @@ jobs:
       - name: Get package info
         id: package
         run: |
-          SYSTEM=$(nix eval --impure --raw --expr 'builtins.currentSystem')
-          echo "system=${SYSTEM}" >> $GITHUB_OUTPUT
-
-          NAME=$(nix eval --raw .#packages."${SYSTEM}".default.name)
-          echo "name=${NAME}-${SYSTEM}" >> $GITHUB_OUTPUT
+          NAME=$(nix eval --raw .#packages."${{ steps.init.outputs.system }}".default.name)
+          echo "name=${NAME}-${{ steps.init.outputs.system }}" >> $GITHUB_OUTPUT
 
       - name: Download build
         uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
         with:
-          name: ${{ steps.package.outputs.system }}
+          name: ${{ steps.init.outputs.system }}
 
       - name: Import build
-        run: nix nario import --no-check-sigs < "${{ steps.package.outputs.system }}.nario"
+        run: nix nario import --no-check-sigs < "${{ steps.init.outputs.system }}.nario"
 
       - name: Bundle
         run: |
@@ -113,13 +136,14 @@ jobs:
           files: ${{ steps.package.outputs.name }}.deb
 
   build-rpm:
+    needs: build
     strategy:
       matrix:
         os: [ubuntu-24.04, ubuntu-24.04-arm]
-    needs: build
     runs-on: ${{ matrix.os }}
     steps:
       - name: Initialize
+        id: init
         uses: spotdemo4/nix-init@a4440ed9daa3faedcfc8cd491dbcfa5e38d84156 # v1.8.14
         with:
           shell: release
@@ -127,19 +151,16 @@ jobs:
       - name: Get package info
         id: package
         run: |
-          SYSTEM=$(nix eval --impure --raw --expr 'builtins.currentSystem')
-          echo "system=${SYSTEM}" >> $GITHUB_OUTPUT
-
-          NAME=$(nix eval --raw .#packages."${SYSTEM}".default.name)
-          echo "name=${NAME}-${SYSTEM}" >> $GITHUB_OUTPUT
+          NAME=$(nix eval --raw .#packages."${{ steps.init.outputs.system }}".default.name)
+          echo "name=${NAME}-${{ steps.init.outputs.system }}" >> $GITHUB_OUTPUT
 
       - name: Download build
         uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
         with:
-          name: ${{ steps.package.outputs.system }}
+          name: ${{ steps.init.outputs.system }}
 
       - name: Import build
-        run: nix nario import --no-check-sigs < "${{ steps.package.outputs.system }}.nario"
+        run: nix nario import --no-check-sigs < "${{ steps.init.outputs.system }}.nario"
 
       - name: Bundle
         run: |
@@ -152,13 +173,14 @@ jobs:
           files: ${{ steps.package.outputs.name }}.rpm
 
   build-container:
+    needs: build
     strategy:
       matrix:
         os: [ubuntu-24.04, ubuntu-24.04-arm]
-    needs: build
     runs-on: ${{ matrix.os }}
     steps:
       - name: Initialize
+        id: init
         uses: spotdemo4/nix-init@a4440ed9daa3faedcfc8cd491dbcfa5e38d84156 # v1.8.14
         with:
           shell: release
@@ -166,19 +188,16 @@ jobs:
       - name: Get package info
         id: package
         run: |
-          SYSTEM=$(nix eval --impure --raw --expr 'builtins.currentSystem')
-          echo "system=${SYSTEM}" >> $GITHUB_OUTPUT
-
-          NAME=$(nix eval --raw .#packages."${SYSTEM}".default.name)
-          echo "name=${NAME}-${SYSTEM}" >> $GITHUB_OUTPUT
+          NAME=$(nix eval --raw .#packages."${{ steps.init.outputs.system }}".default.name)
+          echo "name=${NAME}-${{ steps.init.outputs.system }}" >> $GITHUB_OUTPUT
 
       - name: Download build
         uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
         with:
-          name: ${{ steps.package.outputs.system }}
+          name: ${{ steps.init.outputs.system }}
 
       - name: Import build
-        run: nix nario import --no-check-sigs < "${{ steps.package.outputs.system }}.nario"
+        run: nix nario import --no-check-sigs < "${{ steps.init.outputs.system }}.nario"
 
       - name: Bundle
         run: nix bundle --bundler github:spotdemo4/nur#toDockerStream -o result
@@ -190,4 +209,4 @@ jobs:
           skopeo copy
           --dest-creds="${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}"
           docker-archive:/dev/stdin
-          "docker://ghcr.io/${{ github.repository }}:${GITHUB_REF_NAME#v}-${{ steps.package.outputs.system }}"
+          "docker://ghcr.io/${{ github.repository }}:${GITHUB_REF_NAME#v}-${{ steps.init.outputs.system }}"

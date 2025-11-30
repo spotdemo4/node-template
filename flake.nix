@@ -63,7 +63,6 @@
 
           release = pkgs.mkShell {
             packages = with pkgs; [
-              bubblewrap
               skopeo
             ];
           };
