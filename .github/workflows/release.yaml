@@ -236,6 +236,6 @@ jobs:
             --password "${{ secrets.GITHUB_TOKEN }}" \
             push from-args \
             --platforms linux/amd64,linux/arm64,darwin/arm64 \
-            --template "ghcr.io/${{ github.repository }}:${GITHUB_REF_NAME#v}-OS-ARCH" \
+            --template "docker://ghcr.io/${{ github.repository }}:${GITHUB_REF_NAME#v}-OS-ARCH" \
             --tags latest \
-            --target "ghcr.io/${{ github.repository }}:${GITHUB_REF_NAME#v}}"
+            --target "docker://ghcr.io/${{ github.repository }}:${GITHUB_REF_NAME#v}}"
