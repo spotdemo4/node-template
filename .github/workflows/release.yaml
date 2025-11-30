@@ -173,4 +173,10 @@ jobs:
           --dest-creds=${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}
           docker-archive:/dev/stdin
           docker://ghcr.io/${{ github.repository }}:${GITHUB_REF_NAME#v}
+
+      - name: Tag latest
+        run: >
+          skopeo copy
+          --dest-creds=${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}
+          docker://ghcr.io/${{ github.repository }}:${GITHUB_REF_NAME#v}
           docker://ghcr.io/${{ github.repository }}:latest
