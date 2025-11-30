@@ -3,11 +3,13 @@
 ![check](https://github.com/spotdemo4/node-template/actions/workflows/check.yaml/badge.svg)
 ![vulnerable](https://github.com/spotdemo4/node-template/actions/workflows/vulnerable.yaml/badge.svg)
 
-Template for starting [Node.js](https://nodejs.org) projects. Part of [spotdemo4/templates](https://github.com/spotdemo4/templates)
+Template for starting [Node.js](https://nodejs.org) projects.
+
+Part of [spotdemo4/templates](https://github.com/spotdemo4/templates)
 
 ## Requirements
 
-- [nix](https://nixos.org/) package manager
+- [Nix](https://nixos.org/) package manager
 - (optional) [direnv](https://direnv.net/)
 
 ## Getting started
