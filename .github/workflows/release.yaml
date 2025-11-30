@@ -214,7 +214,7 @@ jobs:
         run: >
           ./result |
           gzip --fast |
-          skopeo copy
+          skopeo --insecure-policy copy
           --dest-creds="${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}"
           docker-archive:/dev/stdin
           "docker://ghcr.io/${{ github.repository }}:${GITHUB_REF_NAME#v}-${{ steps.package.outputs.os }}-${{ steps.package.outputs.arch }}"
