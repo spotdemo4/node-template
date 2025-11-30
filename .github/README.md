@@ -3,9 +3,7 @@
 ![check](https://github.com/spotdemo4/node-template/actions/workflows/check.yaml/badge.svg)
 ![vulnerable](https://github.com/spotdemo4/node-template/actions/workflows/vulnerable.yaml/badge.svg)
 
-Template for starting [Node.js](https://nodejs.org) projects
-
-Part of [spotdemo4/templates](https://github.com/spotdemo4/templates)
+Template for starting [Node.js](https://nodejs.org) projects, part of [spotdemo4/templates](https://github.com/spotdemo4/templates)
 
 ## Requirements
 
@@ -21,7 +19,7 @@ ln -s .envrc.project .envrc &&
 direnv allow
 ```
 
-or enter the dev shell manually:
+or enter the dev environment manually:
 
 ```elm
 nix develop
