@@ -3,7 +3,7 @@
 ![check](https://github.com/spotdemo4/node-template/actions/workflows/check.yaml/badge.svg)
 ![vulnerable](https://github.com/spotdemo4/node-template/actions/workflows/vulnerable.yaml/badge.svg)
 
-Template for starting [Node.js](https://nodejs.org) projects.
+Template for starting [Node.js](https://nodejs.org) projects
 
 Part of [spotdemo4/templates](https://github.com/spotdemo4/templates)
 
@@ -53,7 +53,7 @@ nix flake check
 
 ## Releasing
 
-Releases are automatically created for significant changes.
+Releases are automatically created for significant changes
 
 To manually create a new release:
 
