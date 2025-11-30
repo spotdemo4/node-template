@@ -29,14 +29,26 @@ jobs:
         with:
           generate_release_notes: true
 
-  linux-amd64:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-24.04, ubuntu-24.04-arm, macos-26]
     needs: release
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Initialize
         uses: spotdemo4/nix-init@e2fa614def25ff8e1ba97f43825b1dc198792423 # v1.8.13
         with:
           shell: release
+
+      - name: Get package info
+        id: package
+        run: |
+          SYSTEM=$(nix eval --impure --raw --expr 'builtins.currentSystem')
+          echo "system=${SYSTEM}" >> $GITHUB_OUTPUT
+
+          NAME=$(nix eval --raw .#packages."${SYSTEM}".default.name)
+          echo "name=${NAME}-${SYSTEM}" >> $GITHUB_OUTPUT
 
       - name: Build
         run: nix build
@@ -49,92 +61,128 @@ jobs:
         run: |
           FILE_LINK=$(find -L result -type f -print -quit)
           FILE_REAL=$(readlink -f "${FILE_LINK}")
-          ln -s "${FILE_REAL}" template-linux-amd64
+          ln -s "${FILE_REAL}" "${{ package.name }}"
 
       - name: Release
         uses: softprops/action-gh-release@5be0e66d93ac7ed76da52eca8bb058f665c3a5fe # v2.4.2
         with:
-          files: template-linux-amd64
+          files: ${{ package.name }}
 
       - name: Export build
-        run: nix nario export --format 2 --recursive > linux-amd64.nario
+        run: nix nario export --format 2 --recursive > "${{ package.system }}.nario"
 
       - name: Upload build
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
-          name: linux-amd64
-          path: linux-amd64.nario
+          name: ${{ package.system }}
+          path: ${{ package.system }}.nario
 
-  linux-amd64-deb:
-    needs: linux-amd64
-    runs-on: ubuntu-latest
+  build-deb:
+    strategy:
+      matrix:
+        os: [ubuntu-24.04, ubuntu-24.04-arm]
+    needs: [build:${{ matrix.os }}]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Initialize
         uses: spotdemo4/nix-init@e2fa614def25ff8e1ba97f43825b1dc198792423 # v1.8.13
         with:
           shell: release
 
+      - name: Get package info
+        id: package
+        run: |
+          SYSTEM=$(nix eval --impure --raw --expr 'builtins.currentSystem')
+          echo "system=${SYSTEM}" >> $GITHUB_OUTPUT
+
+          NAME=$(nix eval --raw .#packages."${SYSTEM}".default.name)
+          echo "name=${NAME}-${SYSTEM}" >> $GITHUB_OUTPUT
+
       - name: Download build
         uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
         with:
-          name: linux-amd64
+          name: ${{ package.system }}
 
       - name: Import build
-        run: nix nario import --no-check-sigs < linux-amd64.nario
+        run: nix nario import --no-check-sigs < "${{ package.system }}.nario"
 
       - name: Bundle
         run: |
           nix bundle --bundler github:NixOS/bundlers#toDEB -o result
-          cp result/*.deb template-linux-amd64.deb
+          cp result/*.deb "${{ package.name }}.deb"
 
       - name: Release
         uses: softprops/action-gh-release@5be0e66d93ac7ed76da52eca8bb058f665c3a5fe # v2.4.2
         with:
-          files: template-linux-amd64.deb
+          files: ${{ package.name }}.deb
 
-  linux-amd64-rpm:
-    needs: linux-amd64
-    runs-on: ubuntu-latest
+  build-rpm:
+    strategy:
+      matrix:
+        os: [ubuntu-24.04, ubuntu-24.04-arm]
+    needs: [build:${{ matrix.os }}]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Initialize
         uses: spotdemo4/nix-init@e2fa614def25ff8e1ba97f43825b1dc198792423 # v1.8.13
         with:
           shell: release
 
+      - name: Get package info
+        id: package
+        run: |
+          SYSTEM=$(nix eval --impure --raw --expr 'builtins.currentSystem')
+          echo "system=${SYSTEM}" >> $GITHUB_OUTPUT
+
+          NAME=$(nix eval --raw .#packages."${SYSTEM}".default.name)
+          echo "name=${NAME}-${SYSTEM}" >> $GITHUB_OUTPUT
+
       - name: Download build
         uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
         with:
-          name: linux-amd64
+          name: ${{ package.system }}
 
       - name: Import build
-        run: nix nario import --no-check-sigs < linux-amd64.nario
+        run: nix nario import --no-check-sigs < "${{ package.system }}.nario"
 
       - name: Bundle
         run: |
           nix bundle --bundler github:NixOS/bundlers#toRPM -o result
-          cp result/*.rpm template-linux-amd64.rpm
+          cp result/*.rpm "${{ package.name }}.rpm"
 
       - name: Release
         uses: softprops/action-gh-release@5be0e66d93ac7ed76da52eca8bb058f665c3a5fe # v2.4.2
         with:
-          files: template-linux-amd64.rpm
+          files: ${{ package.name }}.rpm
 
-  linux-amd64-container:
-    needs: linux-amd64
-    runs-on: ubuntu-latest
+  build-container:
+    strategy:
+      matrix:
+        os: [ubuntu-24.04, ubuntu-24.04-arm]
+    needs: [build:${{ matrix.os }}]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Initialize
         uses: spotdemo4/nix-init@e2fa614def25ff8e1ba97f43825b1dc198792423 # v1.8.13
         with:
           shell: release
 
+      - name: Get package info
+        id: package
+        run: |
+          SYSTEM=$(nix eval --impure --raw --expr 'builtins.currentSystem')
+          echo "system=${SYSTEM}" >> $GITHUB_OUTPUT
+
+          NAME=$(nix eval --raw .#packages."${SYSTEM}".default.name)
+          echo "name=${NAME}-${SYSTEM}" >> $GITHUB_OUTPUT
+
       - name: Download build
         uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
         with:
-          name: linux-amd64
+          name: ${{ package.system }}
 
       - name: Import build
-        run: nix nario import --no-check-sigs < linux-amd64.nario
+        run: nix nario import --no-check-sigs < "${{ package.system }}.nario"
 
       - name: Bundle
         run: nix bundle --bundler github:spotdemo4/nur#toDockerStream -o result
@@ -144,107 +192,6 @@ jobs:
           ./result |
           gzip --fast |
           skopeo copy
-          --dest-creds=${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}
+          --dest-creds="${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}"
           docker-archive:/dev/stdin
-          docker://ghcr.io/${{ github.repository }}:${GITHUB_REF_NAME#v}-amd64
-
-  linux-arm64:
-    needs: release
-    runs-on: ubuntu-24.04-arm
-    steps:
-      - name: Initialize
-        uses: spotdemo4/nix-init@e2fa614def25ff8e1ba97f43825b1dc198792423 # v1.8.13
-        with:
-          shell: release
-
-      - name: Build
-        run: nix build
-
-      - name: Bundle
-        run: nix bundle --bundler github:DavHau/nix-portable#zstd-max -o result
-
-      - name: Rename
-        id: rename
-        run: |
-          FILE_LINK=$(find -L result -type f -print -quit)
-          FILE_REAL=$(readlink -f "${FILE_LINK}")
-          ln -s "${FILE_REAL}" template-linux-arm64
-
-      - name: Release
-        uses: softprops/action-gh-release@5be0e66d93ac7ed76da52eca8bb058f665c3a5fe # v2.4.2
-        with:
-          files: template-linux-arm64
-
-      - name: Export build
-        run: nix nario export --format 2 --recursive > linux-arm64.nario
-
-      - name: Upload build
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
-        with:
-          name: linux-arm64
-          path: linux-arm64.nario
-
-  linux-arm64-container:
-    needs: linux-arm64
-    runs-on: ubuntu-24.04-arm
-    steps:
-      - name: Initialize
-        uses: spotdemo4/nix-init@e2fa614def25ff8e1ba97f43825b1dc198792423 # v1.8.13
-        with:
-          shell: release
-
-      - name: Download build
-        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
-        with:
-          name: linux-arm64
-
-      - name: Import build
-        run: nix nario import --no-check-sigs < linux-arm64.nario
-
-      - name: Bundle
-        run: nix bundle --bundler github:spotdemo4/nur#toDockerStream -o result
-
-      - name: Release
-        run: >
-          ./result |
-          gzip --fast |
-          skopeo copy
-          --dest-creds=${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}
-          docker-archive:/dev/stdin
-          docker://ghcr.io/${{ github.repository }}:${GITHUB_REF_NAME#v}-arm64
-
-  macos-arm64:
-    needs: release
-    runs-on: macos-latest
-    steps:
-      - name: Initialize
-        uses: spotdemo4/nix-init@e2fa614def25ff8e1ba97f43825b1dc198792423 # v1.8.13
-        with:
-          shell: release
-
-      - name: Build
-        run: nix build
-
-      - name: Bundle
-        run: nix bundle --bundler github:DavHau/nix-portable#zstd-max -o result
-
-      - name: Rename
-        id: rename
-        run: |
-          FILE_LINK=$(find -L result -type f -print -quit)
-          FILE_REAL=$(readlink -f "${FILE_LINK}")
-          ln -s "${FILE_REAL}" template-macos-arm64
-
-      - name: Release
-        uses: softprops/action-gh-release@5be0e66d93ac7ed76da52eca8bb058f665c3a5fe # v2.4.2
-        with:
-          files: template-macos-arm64
-
-      - name: Export build
-        run: nix nario export --format 2 --recursive > macos-arm64.nario
-
-      - name: Upload build
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
-        with:
-          name: macos-arm64
-          path: macos-arm64.nario
+          "docker://ghcr.io/${{ github.repository }}:${GITHUB_REF_NAME#v}-${{ package.system }}"
