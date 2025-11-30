@@ -61,11 +61,18 @@
             shellHook = pkgs.shellhook.ref;
           };
 
+          release = pkgs.mkShell {
+            packages = with pkgs; [
+              bubblewrap
+              skopeo
+            ];
+          };
+
           update = pkgs.mkShell {
             packages = with pkgs; [
               renovate
 
-              # node
+              # npm
               node
             ];
           };

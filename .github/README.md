@@ -58,3 +58,25 @@ To manually create a new release:
 ```elm
 bumper
 ```
+
+## Using
+
+### Downloads
+
+| OS    | Architecture | Type           | File                                                                                                                     |
+| ----- | ------------ | -------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Linux | AMD64        | Binary         | [template-linux-amd64](https://github.com/spotdemo4/node-template/releases/latest/download/template-linux-amd64)         |
+| Linux | AMD64        | `.deb` Package | [template-linux-amd64.deb](https://github.com/spotdemo4/node-template/releases/latest/download/template-linux-amd64.deb) |
+| Linux | AMD64        | `.rpm` Package | [template-linux-amd64.rpm](https://github.com/spotdemo4/node-template/releases/latest/download/template-linux-amd64.rpm) |
+
+### Docker
+
+```elm
+docker run ghcr.io/spotdemo4/node-template:latest
+```
+
+### Nix
+
+```elm
+nix run github:spotdemo4/node-template
+```
