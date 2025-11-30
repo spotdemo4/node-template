@@ -64,6 +64,7 @@
           release = pkgs.mkShell {
             packages = with pkgs; [
               skopeo
+              manifest-tool
             ];
           };
 

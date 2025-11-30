@@ -174,7 +174,7 @@ jobs:
     needs: build
     strategy:
       matrix:
-        os: [ubuntu-24.04, ubuntu-24.04-arm]
+        os: [ubuntu-24.04, ubuntu-24.04-arm, macos-15]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Initialize
@@ -188,6 +188,16 @@ jobs:
         run: |
           NAME=$(nix eval --raw .#packages."${{ steps.init.outputs.system }}".default.name)
           echo "name=${NAME}-${{ steps.init.outputs.system }}" >> $GITHUB_OUTPUT
+
+          OS=$(uname -s | tr '[:upper:]' '[:lower:]')
+          echo "os=${OS}" >> $GITHUB_OUTPUT
+
+          ARCH=$(uname -m)
+          case "${ARCH}" in
+            x86_64) ARCH="amd64" ;;
+            aarch64) ARCH="arm64" ;;
+          esac
+          echo "arch=${ARCH}" >> $GITHUB_OUTPUT
 
       - name: Download build
         uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
@@ -207,4 +217,24 @@ jobs:
           skopeo copy
           --dest-creds="${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}"
           docker-archive:/dev/stdin
-          "docker://ghcr.io/${{ github.repository }}:${GITHUB_REF_NAME#v}-${{ steps.init.outputs.system }}"
+          "docker://ghcr.io/${{ github.repository }}:${GITHUB_REF_NAME#v}-${{ steps.package.outputs.os }}-${{ steps.package.outputs.arch }}"
+
+  manifest:
+    needs: build-container
+    runs-on: ubuntu-latest
+    steps:
+      - name: Initialize
+        id: init
+        uses: spotdemo4/nix-init@a4440ed9daa3faedcfc8cd491dbcfa5e38d84156 # v1.8.14
+        with:
+          shell: release
+
+      - name: Create manifest
+        run: |
+          manifest-tool push from-args \
+            --username "${{ github.actor }}" \
+            --password "${{ secrets.GITHUB_TOKEN }}" \
+            --platforms linux/amd64,linux/arm64,darwin/arm64 \
+            --template "ghcr.io/${{ github.repository }}:${GITHUB_REF_NAME#v}-OS-ARCH" \
+            --tags latest \
+            --target "ghcr.io/${{ github.repository }}:${GITHUB_REF_NAME#v}}"
