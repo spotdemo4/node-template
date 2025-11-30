@@ -13,12 +13,9 @@
   inputs = {
     systems.url = "github:nix-systems/default";
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    utils = {
-      url = "github:numtide/flake-utils";
-      inputs.systems.follows = "systems";
-    };
     trev = {
       url = "github:spotdemo4/nur";
+      inputs.systems.follows = "systems";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     semgrep-rules = {
@@ -30,12 +27,11 @@
   outputs =
     {
       nixpkgs,
-      utils,
       trev,
       semgrep-rules,
       ...
     }:
-    utils.lib.eachDefaultSystem (
+    trev.libs.mkFlake (
       system:
       let
         pkgs = import nixpkgs {
@@ -130,6 +126,12 @@
               renovate-config-validator .github/renovate.json
             '';
           };
+        };
+
+        apps = pkgs.lib.mkApps {
+          default.script = ''
+            npm run dev
+          '';
         };
 
         packages.default = pkgs.buildNpmPackage (finalAttrs: {

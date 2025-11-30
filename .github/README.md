@@ -34,7 +34,7 @@ npm i
 ## Running
 
 ```elm
-npm run dev
+nix run
 ```
 
 ## Building
