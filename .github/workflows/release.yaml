@@ -61,21 +61,21 @@ jobs:
         run: |
           FILE_LINK=$(find -L result -type f -print -quit)
           FILE_REAL=$(readlink -f "${FILE_LINK}")
-          ln -s "${FILE_REAL}" "${{ package.name }}"
+          ln -s "${FILE_REAL}" "${{ steps.package.outputs.name }}"
 
       - name: Release
         uses: softprops/action-gh-release@5be0e66d93ac7ed76da52eca8bb058f665c3a5fe # v2.4.2
         with:
-          files: ${{ package.name }}
+          files: ${{ steps.package.outputs.name }}
 
       - name: Export build
-        run: nix nario export --format 2 --recursive > "${{ package.system }}.nario"
+        run: nix nario export --format 2 --recursive > "${{ steps.package.outputs.system }}.nario"
 
       - name: Upload build
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
-          name: ${{ package.system }}
-          path: ${{ package.system }}.nario
+          name: ${{ steps.package.outputs.system }}
+          path: ${{ steps.package.outputs.system }}.nario
 
   build-deb:
     strategy:
@@ -101,20 +101,20 @@ jobs:
       - name: Download build
         uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
         with:
-          name: ${{ package.system }}
+          name: ${{ steps.package.outputs.system }}
 
       - name: Import build
-        run: nix nario import --no-check-sigs < "${{ package.system }}.nario"
+        run: nix nario import --no-check-sigs < "${{ steps.package.outputs.system }}.nario"
 
       - name: Bundle
         run: |
           nix bundle --bundler github:NixOS/bundlers#toDEB -o result
-          cp result/*.deb "${{ package.name }}.deb"
+          cp result/*.deb "${{ steps.package.outputs.name }}.deb"
 
       - name: Release
         uses: softprops/action-gh-release@5be0e66d93ac7ed76da52eca8bb058f665c3a5fe # v2.4.2
         with:
-          files: ${{ package.name }}.deb
+          files: ${{ steps.package.outputs.name }}.deb
 
   build-rpm:
     strategy:
@@ -140,20 +140,20 @@ jobs:
       - name: Download build
         uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
         with:
-          name: ${{ package.system }}
+          name: ${{ steps.package.outputs.system }}
 
       - name: Import build
-        run: nix nario import --no-check-sigs < "${{ package.system }}.nario"
+        run: nix nario import --no-check-sigs < "${{ steps.package.outputs.system }}.nario"
 
       - name: Bundle
         run: |
           nix bundle --bundler github:NixOS/bundlers#toRPM -o result
-          cp result/*.rpm "${{ package.name }}.rpm"
+          cp result/*.rpm "${{ steps.package.outputs.name }}.rpm"
 
       - name: Release
         uses: softprops/action-gh-release@5be0e66d93ac7ed76da52eca8bb058f665c3a5fe # v2.4.2
         with:
-          files: ${{ package.name }}.rpm
+          files: ${{ steps.package.outputs.name }}.rpm
 
   build-container:
     strategy:
@@ -179,10 +179,10 @@ jobs:
       - name: Download build
         uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
         with:
-          name: ${{ package.system }}
+          name: ${{ steps.package.outputs.system }}
 
       - name: Import build
-        run: nix nario import --no-check-sigs < "${{ package.system }}.nario"
+        run: nix nario import --no-check-sigs < "${{ steps.package.outputs.system }}.nario"
 
       - name: Bundle
         run: nix bundle --bundler github:spotdemo4/nur#toDockerStream -o result
@@ -194,4 +194,4 @@ jobs:
           skopeo copy
           --dest-creds="${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}"
           docker-archive:/dev/stdin
-          "docker://ghcr.io/${{ github.repository }}:${GITHUB_REF_NAME#v}-${{ package.system }}"
+          "docker://ghcr.io/${{ github.repository }}:${GITHUB_REF_NAME#v}-${{ steps.package.outputs.system }}"
