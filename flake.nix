@@ -1,5 +1,5 @@
 {
-  description = "template";
+  description = "node.js template";
 
   nixConfig = {
     extra-substituters = [
