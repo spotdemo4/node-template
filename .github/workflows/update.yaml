@@ -1,0 +1,27 @@
+name: update
+
+on:
+  schedule:
+    - cron: "0 7-13 * * *" # once an hour from 07:00 to 13:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  renovate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Initialize
+        id: init
+        uses: spotdemo4/nix-init@e2fa614def25ff8e1ba97f43825b1dc198792423 # v1.8.13
+        with:
+          app_id: ${{ vars.CLIENT_ID }}
+          app_key: ${{ secrets.PRIVATE_KEY }}
+          shell: update
+
+      - name: Renovate
+        env:
+          RENOVATE_CONFIG_FILE: .github/renovate.json
+          RENOVATE_TOKEN: ${{ steps.init.outputs.token }}
+        run: renovate

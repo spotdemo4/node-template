@@ -1,0 +1,30 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.3.6/schema.json",
+
+  "formatter": {
+    "enabled": true
+  },
+
+  "linter": {
+    "enabled": true
+  },
+
+  "assist": {
+    "enabled": true
+  },
+
+  "json": {
+    "formatter": {
+      "enabled": false // use prettier until biome supports yaml
+    },
+    "parser": {
+      "allowComments": true
+    }
+  },
+
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  }
+}

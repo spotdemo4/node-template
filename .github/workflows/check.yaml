@@ -1,0 +1,27 @@
+name: check
+
+on:
+  pull_request:
+    branches: ["main"]
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref }}
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    if: ${{ ! startsWith(github.event.head_commit.message, 'bump:') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Initialize
+        id: init
+        uses: spotdemo4/nix-init@e2fa614def25ff8e1ba97f43825b1dc198792423 # v1.8.13
+
+      - name: Run checks
+        if: ${{ steps.init.outputs.duplicate != 'true' }}
+        run: nix flake check
