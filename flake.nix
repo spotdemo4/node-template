@@ -148,7 +148,7 @@
 
         packages.default = pkgs.buildNpmPackage (finalAttrs: {
           pname = "node-template";
-          version = "0.1.8";
+          version = "0.1.9";
           src = builtins.path {
             name = "root";
             path = ./.;
