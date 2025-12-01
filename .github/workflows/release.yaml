@@ -93,7 +93,7 @@ jobs:
 
       - name: Create manifest
         run: |
-          IMAGE="ghcr.io/${{ github.repository }}:${GITHUB_REF_NAME#v}}"
+          IMAGE="ghcr.io/${{ github.repository }}:${GITHUB_REF_NAME#v}"
 
           docker manifest create "${IMAGE}" \
             "${IMAGE}-x86_64-linux" \
