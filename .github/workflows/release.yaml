@@ -14,6 +14,8 @@ jobs:
     steps:
       - name: Initialize
         uses: spotdemo4/nix-init@a4440ed9daa3faedcfc8cd491dbcfa5e38d84156 # v1.8.14
+        with:
+          shell: release
 
       - name: Check
         run: nix flake check
@@ -183,22 +185,6 @@ jobs:
         with:
           shell: release
 
-      - name: Get package info
-        id: package
-        run: |
-          NAME=$(nix eval --raw .#packages."${{ steps.init.outputs.system }}".default.name)
-          echo "name=${NAME}-${{ steps.init.outputs.system }}" >> $GITHUB_OUTPUT
-
-          OS=$(uname -s | tr '[:upper:]' '[:lower:]')
-          echo "os=${OS}" >> $GITHUB_OUTPUT
-
-          ARCH=$(uname -m)
-          case "${ARCH}" in
-            x86_64) ARCH="amd64" ;;
-            aarch64) ARCH="arm64" ;;
-          esac
-          echo "arch=${ARCH}" >> $GITHUB_OUTPUT
-
       - name: Download build
         uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
         with:
@@ -210,14 +196,17 @@ jobs:
       - name: Bundle
         run: nix bundle --bundler github:spotdemo4/nur#toDockerStream -o result
 
+      - name: Setup Skopeo
+        run: |
+          mkdir -p /etc/containers
+          curl -L -o /etc/containers/policy.json https://raw.githubusercontent.com/containers/image/main/default-policy.json
+          skopeo login ghcr.io -u "${{ github.actor }}" -p "${{ secrets.GITHUB_TOKEN }}"
+
       - name: Release
-        run: >
-          ./result |
-          gzip --fast |
-          skopeo --insecure-policy copy
-          --dest-creds="${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}"
-          docker-archive:/dev/stdin
-          "docker://ghcr.io/${{ github.repository }}:${GITHUB_REF_NAME#v}-${{ steps.package.outputs.os }}-${{ steps.package.outputs.arch }}"
+        run: |
+          ./result | gzip --fast | skopeo copy \
+            docker-archive:/dev/stdin \
+            "docker://ghcr.io/${{ github.repository }}:${GITHUB_REF_NAME#v}-${{ steps.init.outputs.system }}"
 
   manifest:
     needs: build-container
@@ -229,13 +218,19 @@ jobs:
         with:
           shell: release
 
+      - name: Setup Buildah
+        run: |
+          mkdir -p /etc/containers
+          curl -L -o /etc/containers/policy.json https://raw.githubusercontent.com/containers/image/main/default-policy.json
+          buildah login ghcr.io -u "${{ github.actor }}" -p "${{ secrets.GITHUB_TOKEN }}"
+
       - name: Create manifest
         run: |
-          manifest-tool \
-            --username "${{ github.actor }}" \
-            --password "${{ secrets.GITHUB_TOKEN }}" \
-            push from-args \
-            --platforms linux/amd64,linux/arm64,darwin/arm64 \
-            --template "docker://ghcr.io/${{ github.repository }}:${GITHUB_REF_NAME#v}-OS-ARCH" \
-            --tags latest \
-            --target "docker://ghcr.io/${{ github.repository }}:${GITHUB_REF_NAME#v}}"
+          IMAGE="ghcr.io/${{ github.repository }}:${GITHUB_REF_NAME#v}}"
+
+          buildah manifest create "${IMAGE}"
+          buildah manifest add "${IMAGE}" "${IMAGE}-x86_64-linux" --arch amd64 --os linux
+          buildah manifest add "${IMAGE}" "${IMAGE}-aarch64-linux" --arch arm64 --os linux
+          buildah manifest add "${IMAGE}" "${IMAGE}-aarch64-darwin" --arch arm64 --os darwin
+          buildah manifest push --all "${IMAGE}" "docker://${IMAGE}"
+          buildah manifest push --all "${IMAGE}" "docker://ghcr.io/${{ github.repository }}:latest"
