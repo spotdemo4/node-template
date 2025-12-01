@@ -210,7 +210,7 @@ jobs:
 
   manifest:
     needs: build-container
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Initialize
         id: init
@@ -218,19 +218,19 @@ jobs:
         with:
           shell: release
 
-      - name: Setup buildah
+      - name: Setup podman
         run: |
           mkdir -p ~/.config/containers
           curl -L -o ~/.config/containers/policy.json https://raw.githubusercontent.com/containers/image/main/default-policy.json
-          buildah login ghcr.io -u "${{ github.actor }}" -p "${{ secrets.GITHUB_TOKEN }}"
+          podman login ghcr.io -u "${{ github.actor }}" -p "${{ secrets.GITHUB_TOKEN }}"
 
       - name: Create manifest
         run: |
           IMAGE="ghcr.io/${{ github.repository }}:${GITHUB_REF_NAME#v}}"
 
-          buildah manifest create "${IMAGE}"
-          buildah manifest add "${IMAGE}" "${IMAGE}-x86_64-linux" --arch amd64 --os linux
-          buildah manifest add "${IMAGE}" "${IMAGE}-aarch64-linux" --arch arm64 --os linux
-          buildah manifest add "${IMAGE}" "${IMAGE}-aarch64-darwin" --arch arm64 --os darwin
-          buildah manifest push --all "${IMAGE}" "docker://${IMAGE}"
-          buildah manifest push --all "${IMAGE}" "docker://ghcr.io/${{ github.repository }}:latest"
+          podman manifest create "${IMAGE}"
+          podman manifest add "${IMAGE}" "${IMAGE}-x86_64-linux" --arch amd64 --os linux
+          podman manifest add "${IMAGE}" "${IMAGE}-aarch64-linux" --arch arm64 --os linux
+          podman manifest add "${IMAGE}" "${IMAGE}-aarch64-darwin" --arch arm64 --os darwin
+          podman manifest push --all "${IMAGE}" "docker://${IMAGE}"
+          podman manifest push --all "${IMAGE}" "docker://ghcr.io/${{ github.repository }}:latest"
