@@ -71,7 +71,6 @@
           release = pkgs.mkShell {
             packages = with pkgs; [
               skopeo
-              podman
             ];
           };
 
