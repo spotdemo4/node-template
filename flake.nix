@@ -178,13 +178,13 @@
           installPhase = ''
             runHook preInstall
 
-             mkdir -p $out/{bin,lib/node_modules/node-template}
-             cp -r build node_modules package.json $out/lib/node_modules/node-template
+            mkdir -p $out/{bin,lib/node_modules/node-template}
+            cp -r build node_modules package.json $out/lib/node_modules/node-template
 
-             makeWrapper "${pkgs.lib.getExe node-slim}" "$out/bin/node-template" \
-               --add-flags "$out/lib/node_modules/node-template/build/index.js"
+            makeWrapper "${pkgs.lib.getExe node-slim}" "$out/bin/node-template" \
+              --add-flags "$out/lib/node_modules/node-template/build/index.js"
 
-             runHook postInstall
+            runHook postInstall
           '';
 
           meta = {

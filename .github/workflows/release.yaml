@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   check:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Initialize
         uses: spotdemo4/nix-init@a4440ed9daa3faedcfc8cd491dbcfa5e38d84156 # v1.8.14
@@ -29,151 +29,35 @@ jobs:
     needs: check
     strategy:
       matrix:
-        os: [ubuntu-24.04, ubuntu-24.04-arm, macos-15]
-    runs-on: ${{ matrix.os }}
+        target: [x86_64-windows, x86_64-linux, aarch64-linux, aarch64-darwin]
+    runs-on: ubuntu-24.04
     steps:
       - name: Initialize
         id: init
         uses: spotdemo4/nix-init@a4440ed9daa3faedcfc8cd491dbcfa5e38d84156 # v1.8.14
         with:
           shell: release
-
-      - name: Get package info
-        id: package
-        run: |
-          NAME=$(nix eval --raw .#packages."${{ steps.init.outputs.system }}".default.name)
-          echo "name=${NAME}-${{ steps.init.outputs.system }}" >> $GITHUB_OUTPUT
-
-      - name: Build
-        run: nix build
-
-      - name: Export build
-        run: nix nario export --format 2 --recursive > "${{ steps.init.outputs.system }}.nario"
-
-      - name: Upload build
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
-        with:
-          name: ${{ steps.init.outputs.system }}
-          path: ${{ steps.init.outputs.system }}.nario
-
-  build-static:
-    needs: build
-    strategy:
-      matrix:
-        os: [ubuntu-24.04, ubuntu-24.04-arm]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - name: Initialize
-        id: init
-        uses: spotdemo4/nix-init@a4440ed9daa3faedcfc8cd491dbcfa5e38d84156 # v1.8.14
-        with:
-          shell: release
-
-      - name: Get package info
-        id: package
-        run: |
-          NAME=$(nix eval --raw .#packages."${{ steps.init.outputs.system }}".default.name)
-          echo "name=${NAME}-${{ steps.init.outputs.system }}" >> $GITHUB_OUTPUT
-
-      - name: Download build
-        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
-        with:
-          name: ${{ steps.init.outputs.system }}
-
-      - name: Import build
-        run: nix nario import --no-check-sigs < "${{ steps.init.outputs.system }}.nario"
 
       - name: Bundle
-        run: nix bundle --bundler github:DavHau/nix-portable#zstd-max -o result
+        run: nix bundle --bundler github:spotdemo4/nur#deno-${{ matrix.target }} -o bundle
 
-      - name: Rename
-        id: rename
-        run: |
-          FILE_LINK=$(find -L result -type f -print -quit)
-          FILE_REAL=$(readlink -f "${FILE_LINK}")
-          ln -s "${FILE_REAL}" "${{ steps.package.outputs.name }}"
+      - if: matrix.target != 'x86_64-windows'
+        name: Package (tar.xz)
+        run: tar -cJf "node-template-${GITHUB_REF_NAME#v}-${{ matrix.target }}.tar.xz" bundle
+
+      - if: matrix.target == 'x86_64-windows'
+        name: Package (zip)
+        run: zip -r "node-template-${GITHUB_REF_NAME#v}-${{ matrix.target }}.zip" bundle
 
       - name: Release
         uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b # v2.5.0
         with:
-          files: ${{ steps.package.outputs.name }}
+          files: |
+            node-template-*-${{ matrix.target }}.tar.xz
+            node-template-*-${{ matrix.target }}.zip
 
-  build-deb:
-    needs: build
-    strategy:
-      matrix:
-        os: [ubuntu-24.04, ubuntu-24.04-arm]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - name: Initialize
-        id: init
-        uses: spotdemo4/nix-init@a4440ed9daa3faedcfc8cd491dbcfa5e38d84156 # v1.8.14
-        with:
-          shell: release
-
-      - name: Get package info
-        id: package
-        run: |
-          NAME=$(nix eval --raw .#packages."${{ steps.init.outputs.system }}".default.name)
-          echo "name=${NAME}-${{ steps.init.outputs.system }}" >> $GITHUB_OUTPUT
-
-      - name: Download build
-        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
-        with:
-          name: ${{ steps.init.outputs.system }}
-
-      - name: Import build
-        run: nix nario import --no-check-sigs < "${{ steps.init.outputs.system }}.nario"
-
-      - name: Bundle
-        run: |
-          nix bundle --bundler github:NixOS/bundlers#toDEB -o result
-          cp result/*.deb "${{ steps.package.outputs.name }}.deb"
-
-      - name: Release
-        uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b # v2.5.0
-        with:
-          files: ${{ steps.package.outputs.name }}.deb
-
-  build-rpm:
-    needs: build
-    strategy:
-      matrix:
-        os: [ubuntu-24.04, ubuntu-24.04-arm]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - name: Initialize
-        id: init
-        uses: spotdemo4/nix-init@a4440ed9daa3faedcfc8cd491dbcfa5e38d84156 # v1.8.14
-        with:
-          shell: release
-
-      - name: Get package info
-        id: package
-        run: |
-          NAME=$(nix eval --raw .#packages."${{ steps.init.outputs.system }}".default.name)
-          echo "name=${NAME}-${{ steps.init.outputs.system }}" >> $GITHUB_OUTPUT
-
-      - name: Download build
-        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
-        with:
-          name: ${{ steps.init.outputs.system }}
-
-      - name: Import build
-        run: nix nario import --no-check-sigs < "${{ steps.init.outputs.system }}.nario"
-
-      - name: Bundle
-        run: |
-          nix bundle --bundler github:NixOS/bundlers#toRPM -o result
-          cp result/*.rpm "${{ steps.package.outputs.name }}.rpm"
-
-      - name: Release
-        uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b # v2.5.0
-        with:
-          files: ${{ steps.package.outputs.name }}.rpm
-
-  build-container:
-    needs: build
+  container:
+    needs: check
     strategy:
       matrix:
         os: [ubuntu-24.04, ubuntu-24.04-arm, macos-15]
@@ -184,14 +68,6 @@ jobs:
         uses: spotdemo4/nix-init@a4440ed9daa3faedcfc8cd491dbcfa5e38d84156 # v1.8.14
         with:
           shell: release
-
-      - name: Download build
-        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
-        with:
-          name: ${{ steps.init.outputs.system }}
-
-      - name: Import build
-        run: nix nario import --no-check-sigs < "${{ steps.init.outputs.system }}.nario"
 
       - name: Bundle
         run: nix bundle --bundler github:spotdemo4/nur#toDockerStream -o result
@@ -222,6 +98,11 @@ jobs:
         run: |
           mkdir -p ~/.config/containers
           curl -L -o ~/.config/containers/policy.json https://raw.githubusercontent.com/containers/image/main/default-policy.json
+
+          # fix for https://github.com/containers/podman/issues/24642#issuecomment-2582629496
+          PODMAN_PATH=$(which podman || echo /usr/local/bin/podman)
+          sudo sed -Ei "s!^profile podman /usr/bin/podman !profile podman $PODMAN_PATH !" /etc/apparmor.d/podman || true
+
           podman login ghcr.io -u "${{ github.actor }}" -p "${{ secrets.GITHUB_TOKEN }}"
 
       - name: Create manifest
