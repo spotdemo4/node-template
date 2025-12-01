@@ -19,7 +19,7 @@ jobs:
         run: nix flake check
 
       - name: Release
-        uses: softprops/action-gh-release@5be0e66d93ac7ed76da52eca8bb058f665c3a5fe # v2.4.2
+        uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b # v2.5.0
         with:
           generate_release_notes: true
 
@@ -92,7 +92,7 @@ jobs:
           ln -s "${FILE_REAL}" "${{ steps.package.outputs.name }}"
 
       - name: Release
-        uses: softprops/action-gh-release@5be0e66d93ac7ed76da52eca8bb058f665c3a5fe # v2.4.2
+        uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b # v2.5.0
         with:
           files: ${{ steps.package.outputs.name }}
 
@@ -129,7 +129,7 @@ jobs:
           cp result/*.deb "${{ steps.package.outputs.name }}.deb"
 
       - name: Release
-        uses: softprops/action-gh-release@5be0e66d93ac7ed76da52eca8bb058f665c3a5fe # v2.4.2
+        uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b # v2.5.0
         with:
           files: ${{ steps.package.outputs.name }}.deb
 
@@ -166,7 +166,7 @@ jobs:
           cp result/*.rpm "${{ steps.package.outputs.name }}.rpm"
 
       - name: Release
-        uses: softprops/action-gh-release@5be0e66d93ac7ed76da52eca8bb058f665c3a5fe # v2.4.2
+        uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b # v2.5.0
         with:
           files: ${{ steps.package.outputs.name }}.rpm
 
