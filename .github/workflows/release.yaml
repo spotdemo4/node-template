@@ -85,7 +85,7 @@ jobs:
             "docker://ghcr.io/${{ github.repository }}:${GITHUB_REF_NAME#v}-${{ steps.init.outputs.system }}"
 
   manifest:
-    needs: build-container
+    needs: container
     runs-on: ubuntu-24.04
     steps:
       - name: Initialize
