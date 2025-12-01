@@ -48,6 +48,7 @@
         devShells = {
           default = pkgs.mkShell {
             packages = with pkgs; [
+              # node
               node
 
               # util
@@ -59,6 +60,12 @@
               prettier
             ];
             shellHook = pkgs.shellhook.ref;
+          };
+
+          bump = pkgs.mkShell {
+            packages = with pkgs; [
+              nix-update
+            ];
           };
 
           release = pkgs.mkShell {
@@ -79,6 +86,7 @@
 
           vulnerable = pkgs.mkShell {
             packages = with pkgs; [
+              # node
               node
 
               # nix
