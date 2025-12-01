@@ -198,8 +198,8 @@ jobs:
 
       - name: Setup skopeo
         run: |
-          mkdir -p /etc/containers
-          sudo curl -L -o /etc/containers/policy.json https://raw.githubusercontent.com/containers/image/main/default-policy.json
+          mkdir -p ~/.config/containers
+          curl -L -o ~/.config/containers/policy.json https://raw.githubusercontent.com/containers/image/main/default-policy.json
           skopeo login ghcr.io -u "${{ github.actor }}" -p "${{ secrets.GITHUB_TOKEN }}"
 
       - name: Release
@@ -220,8 +220,8 @@ jobs:
 
       - name: Setup buildah
         run: |
-          mkdir -p /etc/containers
-          sudo curl -L -o /etc/containers/policy.json https://raw.githubusercontent.com/containers/image/main/default-policy.json
+          mkdir -p ~/.config/containers
+          curl -L -o ~/.config/containers/policy.json https://raw.githubusercontent.com/containers/image/main/default-policy.json
           buildah login ghcr.io -u "${{ github.actor }}" -p "${{ secrets.GITHUB_TOKEN }}"
 
       - name: Create manifest
