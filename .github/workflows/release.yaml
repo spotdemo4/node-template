@@ -66,15 +66,10 @@ jobs:
       - name: Bundle
         run: nix bundle --bundler github:spotdemo4/nur#toDockerStream -o result
 
-      - name: Setup skopeo
-        run: |
-          mkdir -p ~/.config/containers
-          curl -L -o ~/.config/containers/policy.json https://raw.githubusercontent.com/containers/image/main/default-policy.json
-          skopeo login ghcr.io -u "${{ github.actor }}" -p "${{ secrets.GITHUB_TOKEN }}"
-
       - name: Release
         run: |
-          ./result | gzip --fast | skopeo copy \
+          ./result | gzip --fast | skopeo --insecure-policy copy \
+            --dest-creds=${{ github.actor }}:${{ secrets.GITHUB_TOKEN }} \
             docker-archive:/dev/stdin \
             "docker://ghcr.io/${{ github.repository }}:${GITHUB_REF_NAME#v}-${{ steps.init.outputs.system }}"
 
@@ -112,5 +107,5 @@ jobs:
           docker manifest annotate "${LATEST}" "${VERSION}-aarch64-linux" --arch arm64 --os linux
           docker manifest annotate "${LATEST}" "${VERSION}-aarch64-darwin" --arch arm64 --os darwin
 
-          docker manifest push "${IMAGE}"
+          docker manifest push "${VERSION}"
           docker manifest push "${LATEST}"
