@@ -48,9 +48,7 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b # v2.5.0
         with:
-          files: |
-            node-template-*-${{ matrix.target }}.tar.xz
-            node-template-*-${{ matrix.target }}.zip
+          files: node-template-*-${{ matrix.target }}.*
 
   container:
     needs: check
@@ -93,13 +91,26 @@ jobs:
 
       - name: Create manifest
         run: |
-          IMAGE="ghcr.io/${{ github.repository }}:${GITHUB_REF_NAME#v}"
+          VERSION="ghcr.io/${{ github.repository }}:${GITHUB_REF_NAME#v}"
+          LATEST="ghcr.io/${{ github.repository }}:latest"
 
-          docker manifest create "${IMAGE}" \
-            "${IMAGE}-x86_64-linux" \
-            "${IMAGE}-aarch64-linux" \
-            "${IMAGE}-aarch64-darwin"
-          docker manifest annotate "${IMAGE}" "${IMAGE}-x86_64-linux" --arch amd64 --os linux
-          docker manifest annotate "${IMAGE}" "${IMAGE}-aarch64-linux" --arch arm64 --os linux
-          docker manifest annotate "${IMAGE}" "${IMAGE}-aarch64-darwin" --arch arm64 --os darwin
+          docker manifest create "${VERSION}" \
+            "${VERSION}-x86_64-linux" \
+            "${VERSION}-aarch64-linux" \
+            "${VERSION}-aarch64-darwin"
+
+          docker manifest annotate "${VERSION}" "${VERSION}-x86_64-linux" --arch amd64 --os linux
+          docker manifest annotate "${VERSION}" "${VERSION}-aarch64-linux" --arch arm64 --os linux
+          docker manifest annotate "${VERSION}" "${VERSION}-aarch64-darwin" --arch arm64 --os darwin
+
+          docker manifest create "${LATEST}" \
+            "${VERSION}-x86_64-linux" \
+            "${VERSION}-aarch64-linux" \
+            "${VERSION}-aarch64-darwin"
+
+          docker manifest annotate "${LATEST}" "${VERSION}-x86_64-linux" --arch amd64 --os linux
+          docker manifest annotate "${LATEST}" "${VERSION}-aarch64-linux" --arch arm64 --os linux
+          docker manifest annotate "${LATEST}" "${VERSION}-aarch64-darwin" --arch arm64 --os darwin
+
           docker manifest push "${IMAGE}"
+          docker manifest push "${LATEST}"
