@@ -4,7 +4,7 @@
   "version": "0.1.17",
   "license": "MIT",
   "type": "module",
-  "bin": "./build/index.js",
+  "bin": "node ./build/index.js",
   "scripts": {
     "build": "rolldown -c",
     "dev": "rolldown -c && node ./build/index.js"
