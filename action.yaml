@@ -1,7 +1,7 @@
 name: node template
-description: A GitHub Action template for Node.js projects
+description: An action template for node.js projects
 author: trev
 
 runs:
-  using: node24
-  main: src/index.ts
+  using: docker
+  image: docker://ghcr.io/spotdemo4/node-template:0.2.2
