@@ -63,12 +63,12 @@ bumper
 
 ### Binary
 
-| OS      | Architecture | Download                                                                                                                |
-| ------- | ------------ | ----------------------------------------------------------------------------------------------------------------------- |
-| Linux   | x86_64       | [tar.xz](https://github.com/spotdemo4/node-template/releases/download/v0.2.2/node-template-0.2.2-x86_64-linux.tar.xz)   |
-| Linux   | aarch64      | [tar.xz](https://github.com/spotdemo4/node-template/releases/download/v0.2.2/node-template-0.2.2-aarch64-linux.tar.xz)  |
-| MacOS   | aarch64      | [tar.xz](https://github.com/spotdemo4/node-template/releases/download/v0.2.2/node-template-0.2.2-aarch64-darwin.tar.xz) |
-| Windows | x86_64       | [zip](https://github.com/spotdemo4/node-template/releases/download/v0.2.2/node-template-0.2.2-x86_64-windows.zip)       |
+| OS      | Architecture | Download                                                                                                                                                   |
+| ------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Linux   | amd64        | [node-template-0.2.2-x86_64-linux.tar.xz](https://github.com/spotdemo4/node-template/releases/download/v0.2.2/node-template-0.2.2-x86_64-linux.tar.xz)     |
+| Linux   | arm64        | [node-template-0.2.2-aarch64-linux.tar.xz](https://github.com/spotdemo4/node-template/releases/download/v0.2.2/node-template-0.2.2-aarch64-linux.tar.xz)   |
+| MacOS   | arm64        | [node-template-0.2.2-aarch64-darwin.tar.xz](https://github.com/spotdemo4/node-template/releases/download/v0.2.2/node-template-0.2.2-aarch64-darwin.tar.xz) |
+| Windows | amd64        | [node-template-0.2.2-x86_64-windows.zip](https://github.com/spotdemo4/node-template/releases/download/v0.2.2/node-template-0.2.2-x86_64-windows.zip)       |
 
 ### NPM
 
