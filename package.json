@@ -8,8 +8,8 @@
     "node-template": "./build/index.js"
   },
   "scripts": {
-    "prepare": "chmod +x ./build/index.js",
     "build": "rolldown -c",
+    "prepare": "rolldown -c && chmod +x ./build/index.js",
     "dev": "rolldown -c && node ./build/index.js"
   },
   "devDependencies": {
