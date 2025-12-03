@@ -79,7 +79,7 @@ docker run ghcr.io/spotdemo4/node-template:0.2.2
 ### Action
 
 ```yaml
-- name: node-template
+- name: node template
   uses: docker://ghcr.io/spotdemo4/node-template:0.2.2
 ```
 
