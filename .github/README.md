@@ -65,10 +65,10 @@ bumper
 
 | OS      | Architecture | Download                                                                                                                |
 | ------- | ------------ | ----------------------------------------------------------------------------------------------------------------------- |
-| Linux   | x86_64       | [tar.xz](https://github.com/spotdemo4/node-template/releases/download/v0.2.1/node-template-0.2.1-x86_64-linux.tar.xz)   |
-| Linux   | aarch64      | [tar.xz](https://github.com/spotdemo4/node-template/releases/download/v0.2.1/node-template-0.2.1-aarch64-linux.tar.xz)  |
-| MacOS   | aarch64      | [tar.xz](https://github.com/spotdemo4/node-template/releases/download/v0.2.1/node-template-0.2.1-aarch64-darwin.tar.xz) |
-| Windows | x86_64       | [zip](https://github.com/spotdemo4/node-template/releases/download/v0.2.1/node-template-0.2.1-x86_64-windows.zip)       |
+| Linux   | x86_64       | [tar.xz](https://github.com/spotdemo4/node-template/releases/download/v0.2.2/node-template-0.2.2-x86_64-linux.tar.xz)   |
+| Linux   | aarch64      | [tar.xz](https://github.com/spotdemo4/node-template/releases/download/v0.2.2/node-template-0.2.2-aarch64-linux.tar.xz)  |
+| MacOS   | aarch64      | [tar.xz](https://github.com/spotdemo4/node-template/releases/download/v0.2.2/node-template-0.2.2-aarch64-darwin.tar.xz) |
+| Windows | x86_64       | [zip](https://github.com/spotdemo4/node-template/releases/download/v0.2.2/node-template-0.2.2-x86_64-windows.zip)       |
 
 ### NPM
 
@@ -79,7 +79,7 @@ npx github:spotdemo4/node-template
 ### Docker
 
 ```elm
-docker run ghcr.io/spotdemo4/node-template:0.2.1
+docker run ghcr.io/spotdemo4/node-template:0.2.2
 ```
 
 ### Nix
