@@ -6,6 +6,7 @@ export default defineConfig({
 	tsconfig: true,
 	output: {
 		dir: "build",
+		banner: "#!/usr/bin/env node",
 		cleanDir: true,
 	},
 });

@@ -4,8 +4,11 @@
   "version": "0.1.17",
   "license": "MIT",
   "type": "module",
-  "bin": "node ./build/index.js",
+  "bin": {
+    "node-template": "./build/index.js"
+  },
   "scripts": {
+    "prepare": "chmod +x ./build/index.js",
     "build": "rolldown -c",
     "dev": "rolldown -c && node ./build/index.js"
   },
