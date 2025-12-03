@@ -7,7 +7,7 @@ Template for starting [Node.js](https://nodejs.org) projects, part of [spotdemo4
 
 ## Requirements
 
-- [Nix](https://nixos.org/) package manager
+- [nix](https://nixos.org/) package manager
 - (optional) [direnv](https://direnv.net/)
 
 ## Getting started
@@ -61,13 +61,20 @@ bumper
 
 ## Using
 
-### Downloads
+### Binary
 
-| OS    | Architecture | Type           | File                                                                                                                     |
-| ----- | ------------ | -------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| Linux | AMD64        | Binary         | [template-linux-amd64](https://github.com/spotdemo4/node-template/releases/latest/download/template-linux-amd64)         |
-| Linux | AMD64        | `.deb` Package | [template-linux-amd64.deb](https://github.com/spotdemo4/node-template/releases/latest/download/template-linux-amd64.deb) |
-| Linux | AMD64        | `.rpm` Package | [template-linux-amd64.rpm](https://github.com/spotdemo4/node-template/releases/latest/download/template-linux-amd64.rpm) |
+| OS      | Architecture | Download                                                                                                                   |
+| ------- | ------------ | -------------------------------------------------------------------------------------------------------------------------- |
+| Linux   | x86_64       | [download](https://github.com/spotdemo4/node-template/releases/latest/download/node-template-0.1.17-x86_64-linux.tar.xz)   |
+| Linux   | aarch64      | [download](https://github.com/spotdemo4/node-template/releases/latest/download/node-template-0.1.17-aarch64-linux.tar.xz)  |
+| MacOS   | aarch64      | [download](https://github.com/spotdemo4/node-template/releases/latest/download/node-template-0.1.17-aarch64-darwin.tar.xz) |
+| Windows | x86_64       | [download](https://github.com/spotdemo4/node-template/releases/latest/download/node-template-0.1.17-x86_64-windows.zip)    |
+
+### NPM
+
+```elm
+npx github:spotdemo4/node-template
+```
 
 ### Docker
 
