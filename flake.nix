@@ -143,14 +143,7 @@
         };
 
         apps = pkgs.lib.mkApps {
-          dev = {
-            deps = [
-              node
-            ];
-            script = ''
-              npm run dev
-            '';
-          };
+          dev.script = "npm run dev";
         };
 
         packages.default = pkgs.buildNpmPackage (finalAttrs: {

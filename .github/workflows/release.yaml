@@ -64,7 +64,7 @@ jobs:
           shell: release
 
       - name: Bundle
-        run: nix bundle --bundler github:spotdemo4/nur#toDockerStream -o result
+        run: nix bundle --bundler github:spotdemo4/nur#docker-stream -o result
 
       - name: Release
         run: |
