@@ -79,7 +79,7 @@ npx github:spotdemo4/node-template
 ### Docker
 
 ```elm
-docker run ghcr.io/spotdemo4/node-template:latest
+docker run ghcr.io/spotdemo4/node-template:0.2.1
 ```
 
 ### Nix
