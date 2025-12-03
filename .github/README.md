@@ -65,22 +65,22 @@ bumper
 
 | OS      | Architecture | Download                                                                                                                                                   |
 | ------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Linux   | amd64        | [node-template-0.2.2-x86_64-linux.tar.xz](https://github.com/spotdemo4/node-template/releases/download/v0.2.2/node-template-0.2.2-x86_64-linux.tar.xz)     |
-| Linux   | arm64        | [node-template-0.2.2-aarch64-linux.tar.xz](https://github.com/spotdemo4/node-template/releases/download/v0.2.2/node-template-0.2.2-aarch64-linux.tar.xz)   |
-| MacOS   | arm64        | [node-template-0.2.2-aarch64-darwin.tar.xz](https://github.com/spotdemo4/node-template/releases/download/v0.2.2/node-template-0.2.2-aarch64-darwin.tar.xz) |
-| Windows | amd64        | [node-template-0.2.2-x86_64-windows.zip](https://github.com/spotdemo4/node-template/releases/download/v0.2.2/node-template-0.2.2-x86_64-windows.zip)       |
+| Linux   | amd64        | [node-template-0.3.0-x86_64-linux.tar.xz](https://github.com/spotdemo4/node-template/releases/download/v0.3.0/node-template-0.3.0-x86_64-linux.tar.xz)     |
+| Linux   | arm64        | [node-template-0.3.0-aarch64-linux.tar.xz](https://github.com/spotdemo4/node-template/releases/download/v0.3.0/node-template-0.3.0-aarch64-linux.tar.xz)   |
+| MacOS   | arm64        | [node-template-0.3.0-aarch64-darwin.tar.xz](https://github.com/spotdemo4/node-template/releases/download/v0.3.0/node-template-0.3.0-aarch64-darwin.tar.xz) |
+| Windows | amd64        | [node-template-0.3.0-x86_64-windows.zip](https://github.com/spotdemo4/node-template/releases/download/v0.3.0/node-template-0.3.0-x86_64-windows.zip)       |
 
 ### Docker
 
 ```elm
-docker run ghcr.io/spotdemo4/node-template:0.2.2
+docker run ghcr.io/spotdemo4/node-template:0.3.0
 ```
 
 ### Action
 
 ```yaml
 - name: node template
-  uses: docker://ghcr.io/spotdemo4/node-template:0.2.2
+  uses: docker://ghcr.io/spotdemo4/node-template:0.3.0
 ```
 
 ### Nix
