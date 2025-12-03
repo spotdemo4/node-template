@@ -70,7 +70,7 @@ bumper
 | MacOS   | arm64        | [node-template-0.2.2-aarch64-darwin.tar.xz](https://github.com/spotdemo4/node-template/releases/download/v0.2.2/node-template-0.2.2-aarch64-darwin.tar.xz) |
 | Windows | amd64        | [node-template-0.2.2-x86_64-windows.zip](https://github.com/spotdemo4/node-template/releases/download/v0.2.2/node-template-0.2.2-x86_64-windows.zip)       |
 
-### NPM
+### npm
 
 ```elm
 npx github:spotdemo4/node-template

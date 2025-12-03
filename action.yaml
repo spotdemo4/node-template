@@ -1,0 +1,7 @@
+name: node template
+description: A GitHub Action template for Node.js projects
+author: trev
+
+runs:
+  using: node24
+  main: build/index.js

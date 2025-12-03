@@ -25,3 +25,10 @@ jobs:
       - name: Run checks
         if: ${{ steps.init.outputs.duplicate != 'true' }}
         run: nix flake check
+
+  check-action:
+    if: ${{ ! startsWith(github.event.head_commit.message, 'bump:') }}
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Run
+        uses: ./
