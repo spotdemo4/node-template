@@ -87,3 +87,12 @@ docker run ghcr.io/spotdemo4/node-template:0.2.2
 ```elm
 nix run github:spotdemo4/node-template
 ```
+
+### Action
+
+Delete `action.yaml` if unneeded
+
+```yaml
+- name: node-template
+  uses: spotdemo4/node-template@v0.2.2
+```

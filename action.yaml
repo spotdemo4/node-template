@@ -5,3 +5,4 @@ author: trev
 runs:
   using: docker
   image: docker://ghcr.io/spotdemo4/node-template:0.2.2
+# you could also do `using: node24`, but that requires committing the build
