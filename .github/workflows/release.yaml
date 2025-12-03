@@ -23,7 +23,7 @@ jobs:
         with:
           generate_release_notes: true
 
-  build:
+  binary:
     needs: check
     strategy:
       matrix:
@@ -50,7 +50,7 @@ jobs:
         with:
           files: node-template-*-${{ matrix.target }}.*
 
-  container:
+  image:
     needs: check
     strategy:
       matrix:
@@ -74,7 +74,7 @@ jobs:
             "docker://ghcr.io/${{ github.repository }}:${GITHUB_REF_NAME#v}-${{ steps.init.outputs.system }}"
 
   manifest:
-    needs: container
+    needs: image
     runs-on: ubuntu-24.04
     steps:
       - name: Initialize
