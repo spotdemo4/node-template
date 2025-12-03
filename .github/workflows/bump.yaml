@@ -35,4 +35,3 @@ jobs:
           force: ${{ inputs.force }}
           files: |-
             .github/README.md
-            action.yaml

@@ -1,8 +1,0 @@
-name: node template
-description: An action template for node.js projects
-author: trev
-
-runs:
-  # using node here would be faster, but that requires committing the build
-  using: docker
-  image: docker://ghcr.io/spotdemo4/node-template:0.2.2
