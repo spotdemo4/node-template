@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       force:
-        description: "Force bump"
+        description: "Force"
         required: false
         type: choice
         default: "true"
@@ -14,24 +14,31 @@ on:
           - "true"
           - "false"
 
+concurrency:
+  group: release
+
 permissions:
   contents: read
 
 jobs:
   bump:
-    runs-on: ubuntu-24.04
+    runs-on: nix
     steps:
-      - name: Initialize
-        uses: spotdemo4/nix-init@f51467ccff80c7dac6ce50368bc262bddd37f0a6 # v1.17.1
+      - name: Checkout
+        uses: spotdemo4/better-checkout@fbd1d9e60d4d4c5c9efb2244c052cac648d62944 # v0.1.1
         with:
-          app_id: ${{ vars.CLIENT_ID }}
-          app_key: ${{ secrets.PRIVATE_KEY }}
-          fetch_depth: 0
-          shell: bump
+          app-id: ${{ vars.CLIENT_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
+          fetch-depth: 0
+
+      - name: Develop
+        uses: nicknovitski/nix-develop@9be7cfb4b10451d3390a75dc18ad0465bed4932a # v1.2.1
+        with:
+          arguments: ".#bump"
 
       - name: Bump
-        uses: spotdemo4/bumper@98c42c9dc4905f677550fb9e1da71a19ed6ba576 # v0.8.0
-        with:
-          force: ${{ inputs.force }}
-          files: |-
+        run: bumper
+        env:
+          FORCE: ${{ inputs.force }}
+          PATHS: |-
             .github/README.md

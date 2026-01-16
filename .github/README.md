@@ -1,7 +1,7 @@
 # node.js template
 
-![check](https://github.com/spotdemo4/node-template/actions/workflows/check.yaml/badge.svg?branch=main)
-![vulnerable](https://github.com/spotdemo4/node-template/actions/workflows/vulnerable.yaml/badge.svg?branch=main)
+[![check](https://github.com/spotdemo4/node-template/actions/workflows/check.yaml/badge.svg?branch=main)](https://github.com/spotdemo4/node-template/actions/workflows/check.yaml)
+[![vulnerable](https://github.com/spotdemo4/node-template/actions/workflows/vulnerable.yaml/badge.svg?branch=main)](https://github.com/spotdemo4/node-template/actions/workflows/vulnerable.yaml)
 
 Template for starting [node.js](https://nodejs.org) projects, part of [spotdemo4/templates](https://github.com/spotdemo4/templates)
 

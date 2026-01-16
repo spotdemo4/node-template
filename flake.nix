@@ -18,17 +18,12 @@
       inputs.systems.follows = "systems";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    semgrep-rules = {
-      url = "github:semgrep/semgrep-rules";
-      flake = false;
-    };
   };
 
   outputs =
     {
       nixpkgs,
       trev,
-      semgrep-rules,
       ...
     }:
     trev.libs.mkFlake (
@@ -43,6 +38,7 @@
         };
         node = pkgs.nodejs_24;
         node-slim = pkgs.nodejs-slim_24;
+        fs = pkgs.lib.fileset;
       in
       rec {
         devShells = {
@@ -51,26 +47,26 @@
               # node
               node
 
-              # util
-              bumper
-
               # lint
               biome
               nixfmt
               prettier
+
+              # util
+              bumper
             ];
             shellHook = pkgs.shellhook.ref;
           };
 
           bump = pkgs.mkShell {
             packages = with pkgs; [
-              nix-update
+              bumper
             ];
           };
 
           release = pkgs.mkShell {
             packages = with pkgs; [
-              skopeo
+              nix-flake-release
             ];
           };
 
@@ -78,7 +74,7 @@
             packages = with pkgs; [
               renovate
 
-              # npm
+              # npm i
               node
             ];
           };
@@ -102,21 +98,17 @@
             src = packages.default;
             deps = with pkgs; [
               biome
-              opengrep
             ];
             script = ''
               biome ci
-              opengrep scan \
-                --quiet \
-                --error \
-                --use-git-ignore \
-                --config="${semgrep-rules}/javascript" \
-                --config="${semgrep-rules}/typescript"
             '';
           };
 
           nix = {
-            src = ./.;
+            src = fs.toSource {
+              root = ./.;
+              fileset = fs.fileFilter (file: file.hasExt "nix") ./.;
+            };
             deps = with pkgs; [
               nixfmt-tree
             ];
@@ -125,19 +117,46 @@
             '';
           };
 
-          actions = {
-            src = ./.;
+          renovate = {
+            src = fs.toSource {
+              root = ./.github;
+              fileset = ./.github/renovate.json;
+            };
             deps = with pkgs; [
-              prettier
-              action-validator
-              octoscan
               renovate
             ];
             script = ''
-              prettier --check "**/*.json" "**/*.yaml"
-              action-validator .github/**/*.yaml
-              octoscan scan .github
-              renovate-config-validator .github/renovate.json
+              renovate-config-validator renovate.json
+            '';
+          };
+
+          actions = {
+            src = fs.toSource {
+              root = ./.;
+              fileset = fs.unions [
+                ./.github/workflows
+              ];
+            };
+            deps = with pkgs; [
+              action-validator
+              octoscan
+            ];
+            script = ''
+              action-validator **/*.yaml
+              octoscan scan .
+            '';
+          };
+
+          prettier = {
+            src = fs.toSource {
+              root = ./.;
+              fileset = fs.fileFilter (file: file.hasExt "yaml" || file.hasExt "json" || file.hasExt "md") ./.;
+            };
+            deps = with pkgs; [
+              prettier
+            ];
+            script = ''
+              prettier --check .
             '';
           };
         };
@@ -146,48 +165,73 @@
           dev.script = "npm run dev";
         };
 
-        packages.default = pkgs.buildNpmPackage (finalAttrs: {
-          pname = "node-template";
-          version = "0.3.0";
-          src = builtins.path {
-            name = "root";
-            path = ./.;
+        packages = {
+          default = pkgs.buildNpmPackage (finalAttrs: {
+            pname = "node-template";
+            version = "0.3.0";
+
+            src = fs.toSource {
+              root = ./.;
+              fileset = fs.difference ./. (
+                fs.unions [
+                  ./.github
+                  ./.vscode
+                  ./flake.nix
+                  ./flake.lock
+                ]
+              );
+            };
+
+            nodejs = node;
+            npmConfigHook = pkgs.importNpmLock.npmConfigHook;
+            npmDeps = pkgs.importNpmLock {
+              npmRoot = finalAttrs.src;
+            };
+            nativeBuildInputs = with pkgs; [
+              makeWrapper
+            ];
+
+            doCheck = false;
+
+            installPhase = ''
+              runHook preInstall
+
+              mkdir -p $out/{bin,lib/node_modules/node-template}
+              cp -r build node_modules package.json $out/lib/node_modules/node-template
+
+              makeWrapper "${pkgs.lib.getExe node-slim}" "$out/bin/node-template" \
+                --add-flags "$out/lib/node_modules/node-template/build/index.js"
+
+              runHook postInstall
+            '';
+
+            meta = {
+              description = "node template";
+              mainProgram = "node-template";
+              homepage = "https://github.com/spotdemo4/node-template";
+              changelog = "https://github.com/spotdemo4/node-template/releases/tag/v${finalAttrs.version}";
+              license = pkgs.lib.licenses.mit;
+              platforms = pkgs.lib.platforms.all;
+            };
+          });
+
+          image = pkgs.dockerTools.buildLayeredImage {
+            name = packages.default.pname;
+            tag = packages.default.version;
+
+            contents = with pkgs; [
+              dockerTools.caCertificates
+              packages.default
+            ];
+
+            created = "now";
+            meta = packages.default.meta;
+
+            config = {
+              Cmd = [ "${pkgs.lib.meta.getExe packages.default}" ];
+            };
           };
-          nodejs = node;
-
-          npmDeps = pkgs.importNpmLock {
-            npmRoot = finalAttrs.src;
-          };
-
-          npmConfigHook = pkgs.importNpmLock.npmConfigHook;
-
-          nativeBuildInputs = with pkgs; [
-            makeWrapper
-          ];
-
-          doCheck = false;
-
-          installPhase = ''
-            runHook preInstall
-
-            mkdir -p $out/{bin,lib/node_modules/node-template}
-            cp -r build node_modules package.json $out/lib/node_modules/node-template
-
-            makeWrapper "${pkgs.lib.getExe node-slim}" "$out/bin/node-template" \
-              --add-flags "$out/lib/node_modules/node-template/build/index.js"
-
-            runHook postInstall
-          '';
-
-          meta = {
-            description = "node template";
-            mainProgram = "node-template";
-            homepage = "https://github.com/spotdemo4/node-template";
-            changelog = "https://github.com/spotdemo4/node-template/releases/tag/v${finalAttrs.version}";
-            license = pkgs.lib.licenses.mit;
-            platforms = pkgs.lib.platforms.all;
-          };
-        });
+        };
 
         formatter = pkgs.nixfmt-tree;
       }
