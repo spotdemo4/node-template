@@ -23,6 +23,7 @@ jobs:
           app_id: ${{ vars.CLIENT_ID }}
           app_key: ${{ secrets.PRIVATE_KEY }}
           fetch_depth: 0
+          shell: release
 
       - name: Run nix-release
         run: nix-flake-release
