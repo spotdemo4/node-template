@@ -36,13 +36,15 @@
             trev.overlays.libs
           ];
         };
+        fs = pkgs.lib.fileset;
         node = pkgs.nodejs_24;
         node-slim = pkgs.nodejs-slim_24;
-        fs = pkgs.lib.fileset;
       in
       rec {
         devShells = {
           default = pkgs.mkShell {
+            name = "dev";
+            shellHook = pkgs.shellhook.ref;
             packages = with pkgs; [
               # node
               node
@@ -55,22 +57,24 @@
               # util
               bumper
             ];
-            shellHook = pkgs.shellhook.ref;
           };
 
           bump = pkgs.mkShell {
+            name = "bump";
             packages = with pkgs; [
               bumper
             ];
           };
 
           release = pkgs.mkShell {
+            name = "release";
             packages = with pkgs; [
               nix-flake-release
             ];
           };
 
           update = pkgs.mkShell {
+            name = "update";
             packages = with pkgs; [
               renovate
 
@@ -80,6 +84,7 @@
           };
 
           vulnerable = pkgs.mkShell {
+            name = "vulnerable";
             packages = with pkgs; [
               # node
               node
@@ -229,6 +234,13 @@
 
             config = {
               Cmd = [ "${pkgs.lib.meta.getExe packages.default}" ];
+              Labels = {
+                "org.opencontainers.image.title" = packages.default.pname;
+                "org.opencontainers.image.description" = packages.default.meta.description;
+                "org.opencontainers.image.version" = packages.default.version;
+                "org.opencontainers.image.source" = packages.default.meta.homepage;
+                "org.opencontainers.image.licenses" = packages.default.meta.license.spdxId;
+              };
             };
           };
         };

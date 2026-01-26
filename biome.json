@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.3.6/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.3.12/schema.json",
 
   "formatter": {
     "enabled": true
@@ -15,7 +15,7 @@
 
   "json": {
     "formatter": {
-      "enabled": false // use prettier until biome supports yaml
+      "enabled": false
     },
     "parser": {
       "allowComments": true
