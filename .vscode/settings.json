@@ -29,15 +29,5 @@
   },
 
   // actions
-  "editor.defaultFormatter": "prettier.prettier-vscode",
-
-  // https://github.com/prettier/prettier/issues/15956#issuecomment-1949882227
-  "json.schemas": [
-    {
-      "fileMatch": ["biome.jsonc"],
-      "schema": {
-        "allowTrailingCommas": true
-      }
-    }
-  ]
+  "editor.defaultFormatter": "prettier.prettier-vscode"
 }
