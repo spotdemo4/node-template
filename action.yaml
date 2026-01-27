@@ -4,5 +4,5 @@ author: trev
 
 runs:
   using: node24
-  pre: "npm ci && npm run prepare"
+  pre: ".github/pre.sh"
   main: "build/index.js"
