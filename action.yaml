@@ -1,0 +1,8 @@
+name: node template
+description: a template for node projects
+author: trev
+
+runs:
+  using: node24
+  pre: "npm ci && npm run prepare"
+  main: "build/index.js"

@@ -9,8 +9,8 @@
   },
   "scripts": {
     "build": "rolldown -c",
-    "prepare": "rolldown -c && chmod +x ./build/index.js",
-    "dev": "rolldown -c && node ./build/index.js"
+    "dev": "rolldown -c && node ./build/index.js",
+    "prepare": "rolldown -c && chmod +x ./build/index.js"
   },
   "devDependencies": {
     "@tsconfig/node-ts": "^23.6.2",
