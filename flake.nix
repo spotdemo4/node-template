@@ -174,7 +174,7 @@
         packages = with pkgs.lib; rec {
           default = pkgs.buildNpmPackage (finalAttrs: {
             pname = "node-template";
-            version = "0.4.2";
+            version = "0.5.0";
 
             src = fs.toSource {
               root = ./.;
