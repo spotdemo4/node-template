@@ -5,7 +5,6 @@ import { fileURLToPath } from "node:url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const repo = resolve(__dirname, "..");
-console.log(repo);
 
 const ci = execSync("npm ci", { cwd: repo });
 console.log(ci.toString());
