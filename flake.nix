@@ -56,6 +56,7 @@
 
               # util
               bumper
+              nix-flake-release
             ];
           };
 
@@ -170,7 +171,7 @@
           dev.script = "npm run dev";
         };
 
-        packages = {
+        packages = with pkgs.lib; rec {
           default = pkgs.buildNpmPackage (finalAttrs: {
             pname = "node-template";
             version = "0.4.2";
@@ -204,7 +205,7 @@
               mkdir -p $out/{bin,lib/node_modules/node-template}
               cp -r build node_modules package.json $out/lib/node_modules/node-template
 
-              makeWrapper "${pkgs.lib.getExe node-slim}" "$out/bin/node-template" \
+              makeWrapper "${getExe node-slim}" "$out/bin/node-template" \
                 --add-flags "$out/lib/node_modules/node-template/build/index.js"
 
               runHook postInstall
@@ -215,31 +216,30 @@
               mainProgram = "node-template";
               homepage = "https://github.com/spotdemo4/node-template";
               changelog = "https://github.com/spotdemo4/node-template/releases/tag/v${finalAttrs.version}";
-              license = pkgs.lib.licenses.mit;
-              platforms = pkgs.lib.platforms.all;
+              license = licenses.mit;
+              platforms = platforms.all;
             };
           });
 
           image = pkgs.dockerTools.buildLayeredImage {
-            name = packages.default.pname;
-            tag = packages.default.version;
+            name = default.pname;
+            tag = default.version;
 
             contents = with pkgs; [
               dockerTools.caCertificates
-              packages.default
             ];
 
             created = "now";
-            meta = packages.default.meta;
+            meta = default.meta;
 
             config = {
-              Cmd = [ "${pkgs.lib.meta.getExe packages.default}" ];
+              Entrypoint = [ "${meta.getExe default}" ];
               Labels = {
-                "org.opencontainers.image.title" = packages.default.pname;
-                "org.opencontainers.image.description" = packages.default.meta.description;
-                "org.opencontainers.image.version" = packages.default.version;
-                "org.opencontainers.image.source" = packages.default.meta.homepage;
-                "org.opencontainers.image.licenses" = packages.default.meta.license.spdxId;
+                "org.opencontainers.image.title" = default.pname;
+                "org.opencontainers.image.description" = default.meta.description;
+                "org.opencontainers.image.version" = default.version;
+                "org.opencontainers.image.source" = default.meta.homepage;
+                "org.opencontainers.image.licenses" = default.meta.license.spdxId;
               };
             };
           };

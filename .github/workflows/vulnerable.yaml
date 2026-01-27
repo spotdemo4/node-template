@@ -9,7 +9,7 @@ permissions:
   contents: read
 
 jobs:
-  svelte:
+  node:
     runs-on: nix
     steps:
       - name: Checkout
