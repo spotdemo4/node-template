@@ -8,7 +8,7 @@ Template for starting [node.js](https://nodejs.org) projects, part of [spotdemo4
 ## Requirements
 
 - [nix](https://nixos.org/)
-- (optional) [direnv](https://direnv.net/)
+- [direnv](https://direnv.net/) (optional)
 
 ## Getting started
 
@@ -51,24 +51,21 @@ nix flake check
 
 ## Release
 
-Releases are automatically created for significant changes.
+Releases are automatically created for [significant](https://www.conventionalcommits.org/en/v1.0.0/#summary) changes.
 
 To manually create a new release:
 
 ```elm
-bumper
+bumper .github/README.md
 ```
 
 ## Use
 
-### Binary
+### Download
 
-| OS      | Architecture | Download                                                                                                                                                   |
-| ------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Linux   | amd64        | [node-template-0.5.0-x86_64-linux.tar.xz](https://github.com/spotdemo4/node-template/releases/download/v0.5.0/node-template-0.5.0-x86_64-linux.tar.xz)     |
-| Linux   | arm64        | [node-template-0.5.0-aarch64-linux.tar.xz](https://github.com/spotdemo4/node-template/releases/download/v0.5.0/node-template-0.5.0-aarch64-linux.tar.xz)   |
-| MacOS   | arm64        | [node-template-0.5.0-aarch64-darwin.tar.xz](https://github.com/spotdemo4/node-template/releases/download/v0.5.0/node-template-0.5.0-aarch64-darwin.tar.xz) |
-| Windows | amd64        | [node-template-0.5.0-x86_64-windows.zip](https://github.com/spotdemo4/node-template/releases/download/v0.5.0/node-template-0.5.0-x86_64-windows.zip)       |
+| OS    | Architecture | Download                                                                                                                                                 |
+| ----- | ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Linux | amd64        | [node-template_0.5.0_linux_amd64.AppImage](https://github.com/spotdemo4/node-template/releases/download/v0.5.0/node-template_0.5.0_linux_amd64.AppImage) |
 
 ### Docker
 
