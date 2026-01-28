@@ -63,9 +63,12 @@ bumper .github/README.md
 
 ### Download
 
-| OS    | Architecture | Download                                                                                                                                                 |
-| ----- | ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Linux | amd64        | [node-template_0.6.0_linux_amd64.AppImage](https://github.com/spotdemo4/node-template/releases/download/v0.6.0/node-template_0.6.0_linux_amd64.AppImage) |
+| OS      | Architecture | Download                                                                                                                                          |
+| ------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Linux   | amd64        | [node-template_0.6.0_linux_amd64.xz](https://github.com/spotdemo4/node-template/releases/download/v0.6.0/node-template_0.6.0_linux_amd64.xz)      |
+| Linux   | arm64        | [node-template_0.6.0_linux_arm64.xz](https://github.com/spotdemo4/node-template/releases/download/v0.6.0/node-template_0.6.0_linux_arm64.xz)      |
+| MacOS   | arm64        | [node-template_0.6.0_darwin_arm64.xz](https://github.com/spotdemo4/node-template/releases/download/v0.6.0/node-template_0.6.0_darwin_arm64.xz)    |
+| Windows | amd64        | [node-template_0.6.0_windows_amd64.xz](https://github.com/spotdemo4/node-template/releases/download/v0.6.0/node-template_0.6.0_windows_amd64.zip) |
 
 ### Docker
 
