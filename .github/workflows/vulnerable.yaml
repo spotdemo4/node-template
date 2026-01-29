@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   node:
-    runs-on: nix
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: spotdemo4/nix-init@df23370aceae9a7becda32705c2bc6eb7bc6174e # v1.23.0
@@ -21,7 +21,7 @@ jobs:
         run: npm audit --audit-level moderate
 
   nix:
-    runs-on: nix
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: spotdemo4/nix-init@df23370aceae9a7becda32705c2bc6eb7bc6174e # v1.23.0
@@ -32,7 +32,7 @@ jobs:
         run: flake-checker -f
 
   actions:
-    runs-on: nix
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: spotdemo4/nix-init@df23370aceae9a7becda32705c2bc6eb7bc6174e # v1.23.0
