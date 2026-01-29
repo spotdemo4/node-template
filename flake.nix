@@ -140,6 +140,7 @@
             src = fs.toSource {
               root = ./.;
               fileset = fs.unions [
+                ./action.yaml
                 ./.github/workflows
               ];
             };
