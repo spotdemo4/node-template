@@ -56,7 +56,7 @@
 
               # util
               bumper
-              nix-flake-release
+              flake-release
             ];
           };
 
@@ -70,7 +70,7 @@
           release = pkgs.mkShell {
             name = "release";
             packages = with pkgs; [
-              nix-flake-release
+              flake-release
             ];
           };
 
