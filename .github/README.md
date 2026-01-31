@@ -5,16 +5,18 @@
 [![nix](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fspotdemo4%2Fnode-template%2Frefs%2Fheads%2Fmain%2Fflake.lock&query=%24.nodes.nixpkgs.original.ref&logo=nixos&logoColor=%23bac2de&label=channel&labelColor=%23313244&color=%234d6fb7)](https://nixos.org/)
 [![node](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fspotdemo4%2Fnode-template%2Frefs%2Fheads%2Fmain%2Fpackage.json&query=%24.engines.node&logo=nodedotjs&logoColor=%23bac2de&label=version&labelColor=%23313244&color=%23339933)](https://nodejs.org/en/about/previous-releases)
 
-Template for starting [node.js](https://nodejs.org) projects, part of [spotdemo4/templates](https://github.com/spotdemo4/templates)
+template for starting [node.js](https://nodejs.org) projects
 
-## Requirements
+part of [spotdemo4/templates](https://github.com/spotdemo4/templates)
+
+## requirements
 
 - [nix](https://nixos.org/)
 - [direnv](https://direnv.net/) (optional)
 
-## Getting started
+## getting started
 
-Initialize direnv:
+initialize direnv:
 
 ```elm
 ln -s .envrc.project .envrc &&
@@ -33,37 +35,37 @@ then install dependencies:
 npm i
 ```
 
-### Run
+### run
 
 ```elm
 nix run #dev
 ```
 
-### Build
+### build
 
 ```elm
 nix build
 ```
 
-### Check
+### check
 
 ```elm
 nix flake check
 ```
 
-### Release
+### release
 
-Releases are automatically created for [significant](https://www.conventionalcommits.org/en/v1.0.0/#summary) changes.
+releases are automatically created for [significant](https://www.conventionalcommits.org/en/v1.0.0/#summary) changes
 
-To manually create a version bump:
+to manually create a version bump:
 
 ```elm
 bumper .github/README.md
 ```
 
-## Use
+## use
 
-### Download
+### download
 
 | OS      | Architecture | Download                                                                                                                                           |
 | ------- | ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -72,20 +74,20 @@ bumper .github/README.md
 | MacOS   | arm64        | [node-template_0.6.0_darwin_arm64.xz](https://github.com/spotdemo4/node-template/releases/download/v0.6.0/node-template_0.6.0_darwin_arm64.xz)     |
 | Windows | amd64        | [node-template_0.6.0_windows_amd64.zip](https://github.com/spotdemo4/node-template/releases/download/v0.6.0/node-template_0.6.0_windows_amd64.zip) |
 
-### Docker
+### docker
 
 ```elm
 docker run ghcr.io/spotdemo4/node-template:0.6.0
 ```
 
-### Action
+### action
 
 ```yaml
 - name: node template
   uses: spotdemo4/node-template@v0.6.0
 ```
 
-### Nix
+### nix
 
 ```elm
 nix run github:spotdemo4/node-template
