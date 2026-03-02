@@ -24,6 +24,11 @@
       "postUpdateOptions": ["npmInstallTwice"]
     },
     {
+      "matchManagers": ["npm"],
+      "matchDepTypes": ["engines"],
+      "enabled": false
+    },
+    {
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
       "automerge": true
     },
@@ -37,7 +42,7 @@
     },
     {
       "matchManagers": ["npm"],
-      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "matchUpdateTypes": ["minor", "patch"],
       "groupName": "node packages"
     }
   ]
