@@ -19,6 +19,11 @@
   },
   "packageRules": [
     {
+      "matchManagers": ["npm"],
+      "rangeStrategy": "bump",
+      "postUpdateOptions": ["npmInstallTwice"]
+    },
+    {
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
       "automerge": true
     },
@@ -29,11 +34,6 @@
     {
       "matchManagers": ["github-actions"],
       "groupName": "github actions"
-    },
-    {
-      "matchManagers": ["npm"],
-      "rangeStrategy": "bump",
-      "postUpdateOptions": ["npmInstallTwice"]
     },
     {
       "matchManagers": ["npm"],
