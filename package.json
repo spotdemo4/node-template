@@ -16,10 +16,10 @@
     "prepare": "rolldown -c && chmod +x ./build/index.js"
   },
   "devDependencies": {
-    "@tsconfig/node-ts": "^23.6.2",
-    "@tsconfig/node24": "^24.0.3",
-    "@types/node": "^24.10.1",
-    "rolldown": "^1.0.0-beta.52",
+    "@tsconfig/node-ts": "^23.6.4",
+    "@tsconfig/node24": "^24.0.4",
+    "@types/node": "^24.11.0",
+    "rolldown": "^1.0.0-rc.6",
     "typescript": "^5.9.3"
   }
 }
