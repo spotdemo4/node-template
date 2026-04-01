@@ -197,6 +197,7 @@
         };
 
         formatter = pkgs.nixfmt-tree;
+        schemas = trev.schemas;
       }
     );
 }
