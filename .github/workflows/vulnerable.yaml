@@ -7,12 +7,13 @@ on:
 
 permissions:
   contents: read
+  id-token: write
 
 jobs:
-  node:
+  npm:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Initialize
         uses: spotdemo4/nix-init@32b128f67703e246a0895d72d65ae455bf38d559 # v1.41.0
         with:
           shell: vulnerable
@@ -20,10 +21,10 @@ jobs:
       - name: Run npm audit
         run: npm audit --audit-level moderate
 
-  nix:
+  flake:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Initialize
         uses: spotdemo4/nix-init@32b128f67703e246a0895d72d65ae455bf38d559 # v1.41.0
         with:
           shell: vulnerable
@@ -34,7 +35,7 @@ jobs:
   actions:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Initialize
         uses: spotdemo4/nix-init@32b128f67703e246a0895d72d65ae455bf38d559 # v1.41.0
         with:
           shell: vulnerable
