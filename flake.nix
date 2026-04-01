@@ -165,20 +165,6 @@
               makeWrapper
             ];
 
-            doCheck = false;
-
-            installPhase = ''
-              runHook preInstall
-
-              mkdir -p $out/{bin,lib/node_modules/node-template}
-              cp -r build node_modules package.json $out/lib/node_modules/node-template
-
-              makeWrapper "${getExe pkgs.nodejs_24}" "$out/bin/node-template" \
-                --add-flags "$out/lib/node_modules/node-template/build/index.js"
-
-              runHook postInstall
-            '';
-
             meta = {
               mainProgram = "node-template";
               description = "A template for node.js projects.";
