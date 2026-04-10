@@ -20,6 +20,6 @@
     "@tsconfig/node24": "^24.0.4",
     "@types/node": "^24.12.2",
     "rolldown": "^1.0.0-rc.15",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.2"
   }
 }
