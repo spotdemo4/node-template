@@ -34,9 +34,11 @@ jobs:
       - name: Release to GitHub
         run: flake-release
         env:
+          BUNDLE: AppImage
           GITHUB_TOKEN: ${{ steps.init.outputs.token }}
           REGISTRY: ghcr.io
           REGISTRY_USERNAME: ${{ github.actor }}
           REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-          PACKAGES: |-
+          PACKAGES: |
+            packages.${{ steps.init.outputs.system }}.default
             images.${{ steps.init.outputs.system }}.default
