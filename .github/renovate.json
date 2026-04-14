@@ -6,18 +6,27 @@
   "requireConfig": "ignored",
   "platform": "github",
   "repositories": ["spotdemo4/node-template"],
+  "allowedCommands": ["npm audit fix"],
 
   // repository
   "extends": ["config:recommended"],
   "lockFileMaintenance": {
     "enabled": true,
     "automerge": true,
-    "schedule": ["* * * * 0"] // sunday
+    "schedule": ["* * * * 0"], // sunday
+    "skipInstalls": false,
+    "postUpgradeTasks": {
+      "commands": ["npm audit fix"]
+    }
   },
   "nix": {
     "enabled": true
   },
   "packageRules": [
+    {
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true
+    },
     {
       "matchManagers": ["npm"],
       "rangeStrategy": "bump",
@@ -29,8 +38,9 @@
       "enabled": false
     },
     {
-      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
-      "automerge": true
+      "matchManagers": ["npm"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "node packages"
     },
     {
       "matchManagers": ["nix"],
@@ -39,11 +49,6 @@
     {
       "matchManagers": ["github-actions"],
       "groupName": "github actions"
-    },
-    {
-      "matchManagers": ["npm"],
-      "matchUpdateTypes": ["minor", "patch"],
-      "groupName": "node packages"
     }
   ]
 }
