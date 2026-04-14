@@ -69,22 +69,22 @@ bumper .github/README.md
 
 | OS      | Architecture | Download                                                                                                                                           |
 | ------- | ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Linux   | amd64        | [node-template_0.6.1_linux_amd64.xz](https://github.com/spotdemo4/node-template/releases/download/v0.6.1/node-template_0.6.1_linux_amd64.xz)       |
-| Linux   | arm64        | [node-template_0.6.1_linux_arm64.xz](https://github.com/spotdemo4/node-template/releases/download/v0.6.1/node-template_0.6.1_linux_arm64.xz)       |
-| MacOS   | arm64        | [node-template_0.6.1_darwin_arm64.xz](https://github.com/spotdemo4/node-template/releases/download/v0.6.1/node-template_0.6.1_darwin_arm64.xz)     |
-| Windows | amd64        | [node-template_0.6.1_windows_amd64.zip](https://github.com/spotdemo4/node-template/releases/download/v0.6.1/node-template_0.6.1_windows_amd64.zip) |
+| Linux   | amd64        | [node-template_0.6.2_linux_amd64.xz](https://github.com/spotdemo4/node-template/releases/download/v0.6.2/node-template_0.6.2_linux_amd64.xz)       |
+| Linux   | arm64        | [node-template_0.6.2_linux_arm64.xz](https://github.com/spotdemo4/node-template/releases/download/v0.6.2/node-template_0.6.2_linux_arm64.xz)       |
+| MacOS   | arm64        | [node-template_0.6.2_darwin_arm64.xz](https://github.com/spotdemo4/node-template/releases/download/v0.6.2/node-template_0.6.2_darwin_arm64.xz)     |
+| Windows | amd64        | [node-template_0.6.2_windows_amd64.zip](https://github.com/spotdemo4/node-template/releases/download/v0.6.2/node-template_0.6.2_windows_amd64.zip) |
 
 ### docker
 
 ```elm
-docker run ghcr.io/spotdemo4/node-template:0.6.1
+docker run ghcr.io/spotdemo4/node-template:0.6.2
 ```
 
 ### action
 
 ```yaml
 - name: node template
-  uses: spotdemo4/node-template@v0.6.1
+  uses: spotdemo4/node-template@v0.6.2
 ```
 
 ### nix
