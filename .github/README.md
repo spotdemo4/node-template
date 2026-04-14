@@ -67,10 +67,10 @@ bumper .github/README.md
 
 ### download
 
-| OS    | Architecture | Download                                                                                                                                     |
-| ----- | ------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| Linux | amd64        | [node-template_0.6.2_amd64.AppImage](https://github.com/spotdemo4/node-template/releases/download/v0.6.2/node-template_0.6.2_amd64.AppImage) |
-| Linux | arm64        | [node-template_0.6.2_arm64.AppImage](https://github.com/spotdemo4/node-template/releases/download/v0.6.2/node-template_0.6.2_arm64.AppImage) |
+| Architecture | Download                                                                                                                                     |
+| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| amd64        | [node-template_0.6.2_amd64.AppImage](https://github.com/spotdemo4/node-template/releases/download/v0.6.2/node-template_0.6.2_amd64.AppImage) |
+| arm64        | [node-template_0.6.2_arm64.AppImage](https://github.com/spotdemo4/node-template/releases/download/v0.6.2/node-template_0.6.2_arm64.AppImage) |
 
 ### docker
 
