@@ -79,7 +79,7 @@
         checks = pkgs.mkChecks {
           node = {
             src = self.packages.${system}.default;
-            deps = with pkgs; [
+            packages = with pkgs; [
               biome
             ];
             script = ''
@@ -90,7 +90,7 @@
           actions = {
             root = ./.;
             fileset = ./.github/workflows;
-            deps = with pkgs; [
+            packages = with pkgs; [
               action-validator
               octoscan
             ];
@@ -103,7 +103,7 @@
           renovate = {
             root = ./.github;
             fileset = ./.github/renovate.json;
-            deps = with pkgs; [
+            packages = with pkgs; [
               renovate
             ];
             script = ''
@@ -114,7 +114,7 @@
           nix = {
             root = ./.;
             filter = file: file.hasExt "nix";
-            deps = with pkgs; [
+            packages = with pkgs; [
               nixfmt
             ];
             forEach = ''
@@ -125,7 +125,7 @@
           prettier = {
             root = ./.;
             filter = file: file.hasExt "yaml" || file.hasExt "json" || file.hasExt "md";
-            deps = with pkgs; [
+            packages = with pkgs; [
               prettier
             ];
             forEach = ''
