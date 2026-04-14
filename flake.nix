@@ -161,10 +161,6 @@
               npmRoot = finalAttrs.src;
             };
 
-            nativeBuildInputs = with pkgs; [
-              makeWrapper
-            ];
-
             meta = {
               mainProgram = "node-template";
               description = "A template for node.js projects.";
