@@ -32,7 +32,6 @@
           default = pkgs.mkShell {
             shellHook = pkgs.shellhook.ref;
             packages = with pkgs; [
-              # node
               nodejs_24
 
               # lint
@@ -138,8 +137,8 @@
           dev = "npm run dev";
         };
 
-        packages = with pkgs.lib; {
-          default = pkgs.buildNpmPackage (finalAttrs: {
+        packages.default = pkgs.buildNpmPackage (
+          final: with pkgs.lib; {
             pname = "node-template";
             version = "0.6.2";
 
@@ -158,7 +157,7 @@
             nodejs = pkgs.nodejs_24;
             npmConfigHook = pkgs.importNpmLock.npmConfigHook;
             npmDeps = pkgs.importNpmLock {
-              npmRoot = finalAttrs.src;
+              npmRoot = final.src;
             };
 
             meta = {
@@ -167,15 +166,17 @@
               license = licenses.mit;
               platforms = platforms.all;
               homepage = "https://github.com/spotdemo4/node-template";
-              changelog = "https://github.com/spotdemo4/node-template/releases/tag/v${finalAttrs.version}";
+              changelog = "https://github.com/spotdemo4/node-template/releases/tag/v${final.version}";
             };
-          });
+          }
+        );
+
+        images.default = pkgs.mkImage {
+          src = self.packages.${system}.default;
         };
 
-        images = {
-          default = pkgs.mkImage self.packages.${system}.default {
-            contents = with pkgs; [ dockerTools.caCertificates ];
-          };
+        appimages.default = pkgs.mkAppImage {
+          src = self.packages.${system}.default;
         };
 
         formatter = pkgs.nixfmt-tree;

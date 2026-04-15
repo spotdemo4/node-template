@@ -15,12 +15,7 @@ permissions:
 
 jobs:
   release:
-    strategy:
-      matrix:
-        image:
-          - ubuntu-24.04
-          - ubuntu-24.04-arm
-    runs-on: ${{ matrix.image }}
+    runs-on: ubuntu-latest
     steps:
       - id: init
         name: Initialize
@@ -34,11 +29,14 @@ jobs:
       - name: Release to GitHub
         run: flake-release
         env:
-          BUNDLE: AppImage
           GITHUB_TOKEN: ${{ steps.init.outputs.token }}
           REGISTRY: ghcr.io
           REGISTRY_USERNAME: ${{ github.actor }}
           REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
           PACKAGES: |
-            packages.${{ steps.init.outputs.system }}.default
-            images.${{ steps.init.outputs.system }}.default
+            appimages.x86_64-linux.default.x86_64-linux-gnu
+            appimages.x86_64-linux.default.aarch64-linux-gnu
+            appimages.x86_64-linux.default.armv7l-linux-gnu
+            images.x86_64-linux.default.x86_64-linux-gnu
+            images.x86_64-linux.default.aarch64-linux-gnu
+            images.x86_64-linux.default.armv7l-linux-gnu
