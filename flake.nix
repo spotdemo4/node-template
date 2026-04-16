@@ -165,6 +165,7 @@
               description = "A template for node.js projects.";
               license = licenses.mit;
               platforms = platforms.all;
+              badPlatforms = [ systems.inspect.platformPatterns.isStatic ];
               homepage = "https://github.com/spotdemo4/node-template";
               changelog = "https://github.com/spotdemo4/node-template/releases/tag/v${final.version}";
             };
