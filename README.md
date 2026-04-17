@@ -59,8 +59,8 @@ bumper .github/README.md
 
 ### download
 
-| Architecture | Download                                                                                                                                     |
-| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| Architecture | Download                                                                                                                                        |
+| ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------- |
 | amd64        | [node-template_0.6.10_amd64.AppImage](https://github.com/spotdemo4/node-template/releases/download/v0.6.10/node-template_0.6.10_amd64.AppImage) |
 | arm64        | [node-template_0.6.10_arm64.AppImage](https://github.com/spotdemo4/node-template/releases/download/v0.6.10/node-template_0.6.10_arm64.AppImage) |
 
