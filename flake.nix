@@ -89,7 +89,10 @@
 
           actions = {
             root = ./.;
-            fileset = ./.github/workflows;
+            files = [
+              ./action.yaml
+              ./.github/workflows
+            ];
             packages = with pkgs; [
               action-validator
               octoscan
@@ -102,7 +105,7 @@
 
           renovate = {
             root = ./.github;
-            fileset = ./.github/renovate.json;
+            files = ./.github/renovate.json;
             packages = with pkgs; [
               renovate
             ];
@@ -124,7 +127,7 @@
 
           prettier = {
             root = ./.;
-            filter = file: file.hasExt "yaml" || file.hasExt "json" || file.hasExt "md";
+            filter = file: file.hasExt "yaml" || file.hasExt "md";
             packages = with pkgs; [
               prettier
             ];
@@ -132,6 +135,15 @@
               prettier --check "$file"
             '';
           };
+        };
+
+        formatter = pkgs.treefmt.withConfig {
+          configFile = ./treefmt.toml;
+          runtimeInputs = with pkgs; [
+            biome
+            nixfmt
+            prettier
+          ];
         };
 
         apps = pkgs.mkApps {
@@ -181,7 +193,6 @@
           src = self.packages.${system}.default;
         };
 
-        formatter = pkgs.nixfmt-tree;
         schemas = trev.schemas;
       }
     );
