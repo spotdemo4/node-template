@@ -162,7 +162,7 @@
 
             meta = {
               mainProgram = "node-template";
-              description = "A template for node.js projects.";
+              description = "A template for node.js projects";
               license = licenses.mit;
               platforms = platforms.all;
               badPlatforms = [ systems.inspect.platformPatterns.isStatic ];
