@@ -14,18 +14,10 @@ part of [spotdemo4/templates](https://github.com/spotdemo4/templates)
 ## requirements
 
 - [nix](https://nixos.org/)
-- [direnv](https://direnv.net/) (optional)
 
 ## getting started
 
-initialize direnv:
-
-```elm
-ln -s .envrc.project .envrc &&
-direnv allow
-```
-
-or manually enter the development environment:
+enter the development environment:
 
 ```elm
 nix develop
@@ -58,8 +50,6 @@ nix flake check
 ### release
 
 releases are automatically created for [significant](https://www.conventionalcommits.org/en/v1.0.0/#summary) changes
-
-to manually create a version bump:
 
 ```elm
 bumper .github/README.md
