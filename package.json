@@ -4,6 +4,9 @@
   "description": "A template for node.js projects",
   "license": "MIT",
   "type": "module",
+  "repository": {
+    "url": "https://github.com/spotdemo4/node-template"
+  },
   "engines": {
     "node": ">=24.0.0"
   },
