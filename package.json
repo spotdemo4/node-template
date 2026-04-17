@@ -1,6 +1,6 @@
 {
   "name": "@spotdemo4/node-template",
-  "version": "0.6.9",
+  "version": "0.6.10",
   "description": "A template for node.js projects",
   "license": "MIT",
   "type": "module",
