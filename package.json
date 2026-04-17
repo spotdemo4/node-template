@@ -16,7 +16,8 @@
 	"scripts": {
 		"build": "rolldown -c",
 		"dev": "rolldown -c && node build/index.js",
-		"prepare": "rolldown -c && chmod +x build/index.js"
+		"prepare": "rolldown -c && chmod +x build/index.js",
+		"test": "node --test"
 	},
 	"devDependencies": {
 		"@tsconfig/node-ts": "^23.6.4",

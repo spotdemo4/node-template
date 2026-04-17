@@ -1,3 +1,4 @@
 import { hello } from "./hello.ts";
 
-hello();
+const message = hello();
+console.log(message);

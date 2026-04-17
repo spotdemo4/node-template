@@ -2,5 +2,8 @@
 	"extends": [
 		"@tsconfig/node24/tsconfig.json",
 		"@tsconfig/node-ts/tsconfig.json"
-	]
+	],
+	"compilerOptions": {
+		"types": ["node"]
+	}
 }

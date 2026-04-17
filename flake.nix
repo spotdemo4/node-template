@@ -79,6 +79,15 @@
         checks = pkgs.mkChecks {
           node = {
             src = self.packages.${system}.default;
+            script = ''
+              npm test
+            '';
+          };
+
+          biome = {
+            root = ./.;
+            filter = file: file.hasExt "ts" || file.hasExt "js" || file.hasExt "json";
+            include = ./.gitignore;
             packages = with pkgs; [
               biome
             ];
@@ -157,14 +166,15 @@
 
             src = fileset.toSource {
               root = ./.;
-              fileset = fileset.difference ./. (
-                fileset.unions [
-                  ./.github
-                  ./.vscode
-                  ./flake.nix
-                  ./flake.lock
-                ]
-              );
+              fileset = fileset.unions [
+                ./.npmrc
+                ./package.json
+                ./package-lock.json
+                ./rolldown.config.ts
+                ./tsconfig.json
+                ./src
+                ./tests
+              ];
             };
 
             nodejs = pkgs.nodejs_24;
