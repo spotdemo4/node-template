@@ -58,7 +58,7 @@ nix fmt
 releases are automatically created for [significant](https://www.conventionalcommits.org/en/v1.0.0/#summary) changes
 
 ```elm
-bumper 'README.md'
+bumper "README.md"
 ```
 
 ## use
