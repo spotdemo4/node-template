@@ -55,7 +55,8 @@
 
           release = pkgs.mkShell {
             packages = with pkgs; [
-              flake-release
+              flake-release # github
+              nodejs_24 # npm publish
             ];
           };
 
@@ -68,7 +69,7 @@
 
           vulnerable = pkgs.mkShell {
             packages = with pkgs; [
-              nodejs_24 # node
+              nodejs_24 # npm audit
               flake-checker # nix
               octoscan # actions
             ];
