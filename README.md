@@ -61,19 +61,19 @@ bumper .github/README.md
 
 | Architecture | Download                                                                                                                                     |
 | ------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| amd64        | [node-template_0.6.8_amd64.AppImage](https://github.com/spotdemo4/node-template/releases/download/v0.6.8/node-template_0.6.8_amd64.AppImage) |
-| arm64        | [node-template_0.6.8_arm64.AppImage](https://github.com/spotdemo4/node-template/releases/download/v0.6.8/node-template_0.6.8_arm64.AppImage) |
+| amd64        | [node-template_0.6.9_amd64.AppImage](https://github.com/spotdemo4/node-template/releases/download/v0.6.9/node-template_0.6.9_amd64.AppImage) |
+| arm64        | [node-template_0.6.9_arm64.AppImage](https://github.com/spotdemo4/node-template/releases/download/v0.6.9/node-template_0.6.9_arm64.AppImage) |
 
 ### docker
 
 ```elm
-docker run ghcr.io/spotdemo4/node-template:0.6.8
+docker run ghcr.io/spotdemo4/node-template:0.6.9
 ```
 
 ### action
 
 ```yaml
-- uses: spotdemo4/node-template@v0.6.8
+- uses: spotdemo4/node-template@v0.6.9
 ```
 
 ### nix
