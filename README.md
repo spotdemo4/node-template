@@ -32,19 +32,7 @@ npm i
 ### run
 
 ```elm
-nix run #dev
-```
-
-### build
-
-```elm
-nix build
-```
-
-### check
-
-```elm
-nix flake check
+nix run
 ```
 
 ### format
@@ -53,13 +41,25 @@ nix flake check
 nix fmt
 ```
 
-### release
+### check
 
-releases are automatically created for [significant](https://www.conventionalcommits.org/en/v1.0.0/#summary) changes
+```elm
+nix flake check
+```
+
+### build
+
+```elm
+nix build
+```
+
+### release
 
 ```elm
 bumper "README.md"
 ```
+
+releases are automatically created for [significant](https://www.conventionalcommits.org/en/v1.0.0/#summary) changes
 
 ## use
 
@@ -71,16 +71,16 @@ bumper "README.md"
 | arm64        | [node-template_0.6.10_arm64.AppImage](https://github.com/spotdemo4/node-template/releases/download/v0.6.10/node-template_0.6.10_arm64.AppImage) |
 | arm          | [node-template_0.6.10_arm.AppImage](https://github.com/spotdemo4/node-template/releases/download/v0.6.10/node-template_0.6.10_arm.AppImage)     |
 
+### npm
+
+```elm
+npx spotdemo4/node-template
+```
+
 ### docker
 
 ```elm
 docker run ghcr.io/spotdemo4/node-template:0.6.10
-```
-
-### action
-
-```yaml
-- uses: spotdemo4/node-template@v0.6.10
 ```
 
 ### nix
@@ -89,8 +89,8 @@ docker run ghcr.io/spotdemo4/node-template:0.6.10
 nix run github:spotdemo4/node-template
 ```
 
-### npm
+### action
 
-```elm
-npx spotdemo4/node-template
+```yaml
+- uses: spotdemo4/node-template@v0.6.10
 ```

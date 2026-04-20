@@ -76,6 +76,10 @@
           };
         };
 
+        apps = pkgs.mkApps {
+          default = "npm run dev";
+        };
+
         checks = pkgs.mkChecks {
           node = {
             src = self.packages.${system}.default;
@@ -153,10 +157,6 @@
             nixfmt
             prettier
           ];
-        };
-
-        apps = pkgs.mkApps {
-          dev = "npm run dev";
         };
 
         packages.default = pkgs.buildNpmPackage (
