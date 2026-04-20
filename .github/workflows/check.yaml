@@ -12,11 +12,12 @@ concurrency:
 
 permissions:
   contents: read
-  id-token: write
 
 jobs:
   check:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
     steps:
       - name: Initialize
         uses: spotdemo4/nix-init@757d5ba1fa0749e877484703bece0e17c7bd5670 # v1.43.0
@@ -26,6 +27,8 @@ jobs:
 
   action:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
     steps:
       - name: Run action
-        uses: spotdemo4/node-template@main
+        uses: spotdemo4/node-template@main # zizmor: ignore[unpinned-uses]
