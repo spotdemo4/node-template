@@ -9,13 +9,15 @@ concurrency:
   group: release
 
 permissions:
-  contents: write
-  id-token: write
-  packages: write
+  contents: read
 
 jobs:
   release:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write
+      packages: write
     steps:
       - name: Initialize
         uses: spotdemo4/nix-init@78cb37091fca621cf273ed076027ebfbaf906457 # v1.44.2
@@ -35,7 +37,7 @@ jobs:
             images.x86_64-linux.default.armv7l-unknown-linux-gnueabihf
             images.x86_64-linux.default.x86_64-unknown-linux-gnu
 
-      - name: Release to NPM
+      - name: Release to npm
         run: npm publish --access public
 
       - name: Release to FlakeHub

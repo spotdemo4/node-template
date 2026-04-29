@@ -1,4 +1,5 @@
 {
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
 	"editor.formatOnSave": true,
 	"files.associations": {
 		"renovate.json": "jsonc",
@@ -6,8 +7,31 @@
 		".envrc": "dotenv"
 	},
 
-	// node
+	// nix
+	"nix.enableLanguageServer": true,
+	"nix.serverPath": "nixd",
+	"nix.serverSettings": {
+		"nixd": {
+			"nixpkgs": {
+				"expr": "(builtins.getFlake (builtins.toString ./.)).outputs.nixpkgs.${builtins.currentSystem}"
+			}
+		}
+	},
+	"[nix]": {
+		"editor.defaultFormatter": "jnoortheen.nix-ide"
+	},
+
+	// json
+	"json.schemaDownload.trustedDomains": {
+		"https://docs.renovatebot.com/": true
+	},
+
+	// biome
 	"biome.enabled": true,
+	"editor.codeActionsOnSave": {
+		"source.fixAll.biome": "explicit",
+		"source.organizeImports.biome": "explicit"
+	},
 	"[javascript]": {
 		"editor.defaultFormatter": "biomejs.biome"
 	},
@@ -22,24 +46,5 @@
 	},
 	"[jsonc]": {
 		"editor.defaultFormatter": "biomejs.biome"
-	},
-	"editor.codeActionsOnSave": {
-		"source.fixAll.biome": "explicit",
-		"source.organizeImports.biome": "explicit"
-	},
-
-	// nix
-	"nix.enableLanguageServer": true,
-	"nix.serverPath": "nixd",
-	"[nix]": {
-		"editor.defaultFormatter": "jnoortheen.nix-ide"
-	},
-
-	// actions
-	"editor.defaultFormatter": "esbenp.prettier-vscode",
-
-	// json
-	"json.schemaDownload.trustedDomains": {
-		"https://docs.renovatebot.com/": true
 	}
 }

@@ -28,22 +28,26 @@
     }:
     trev.libs.mkFlake (
       system: pkgs: {
+
+        # nix develop [#...]
         devShells = {
           default = pkgs.mkShell {
             shellHook = pkgs.shellhook.ref;
             packages = with pkgs; [
+              # node
               nodejs_24
 
               # lint
               biome
+              nixd
 
               # format
-              nixfmt
+              treefmt
               prettier
+              nixfmt
 
               # util
               bumper
-              flake-release
             ];
           };
 
@@ -63,40 +67,108 @@
           update = pkgs.mkShell {
             packages = with pkgs; [
               renovate
-              nodejs_24 # npm i
+              nodejs_24 # npm install
             ];
           };
 
           vulnerable = pkgs.mkShell {
             packages = with pkgs; [
-              nodejs_24 # npm audit
               flake-checker # nix
               zizmor # actions
+              nodejs_24 # npm audit
             ];
           };
         };
 
+        # nix run [#...]
         apps = pkgs.mkApps {
           default = "npm run dev";
         };
 
-        checks = pkgs.mkChecks {
-          node = {
+        # nix build [#...]
+        packages = {
+          default = pkgs.buildNpmPackage (
+            final: with pkgs.lib; {
+              pname = "node-template";
+              version = "0.6.10";
+
+              src = fileset.toSource {
+                root = ./.;
+                fileset = fileset.unions [
+                  ./.npmrc
+                  ./package.json
+                  ./package-lock.json
+                  ./rolldown.config.ts
+                  ./tsconfig.json
+                  ./src
+                  ./tests
+                ];
+              };
+
+              nodejs = pkgs.nodejs_24;
+              npmConfigHook = pkgs.importNpmLock.npmConfigHook;
+              npmDeps = pkgs.importNpmLock {
+                npmRoot = final.src;
+              };
+
+              meta = {
+                mainProgram = "node-template";
+                description = "A template for node.js projects";
+                license = licenses.mit;
+                platforms = platforms.all;
+                badPlatforms = [ systems.inspect.platformPatterns.isStatic ];
+                homepage = "https://github.com/spotdemo4/node-template";
+                changelog = "https://github.com/spotdemo4/node-template/releases/tag/v${final.version}";
+              };
+            }
+          );
+        };
+
+        # nix build #images.[...]
+        images = {
+          default = pkgs.mkImage {
             src = self.packages.${system}.default;
-            script = ''
-              npm test
+          };
+        };
+
+        # nix build #appimages.[...]
+        appimages = {
+          default = pkgs.mkAppImage {
+            src = self.packages.${system}.default;
+          };
+        };
+
+        # nix fmt
+        formatter = pkgs.treefmt.withConfig {
+          configFile = ./treefmt.toml;
+          runtimeInputs = with pkgs; [
+            prettier
+            nixfmt
+            biome
+          ];
+        };
+
+        # nix flake check
+        checks = pkgs.mkChecks {
+          prettier = {
+            root = ./.;
+            filter = file: file.hasExt "yaml" || file.hasExt "md";
+            packages = with pkgs; [
+              prettier
+            ];
+            forEach = ''
+              prettier --check "$file"
             '';
           };
 
-          biome = {
+          nix = {
             root = ./.;
-            filter = file: file.hasExt "ts" || file.hasExt "js" || file.hasExt "json";
-            include = ./.gitignore;
+            filter = file: file.hasExt "nix";
             packages = with pkgs; [
-              biome
+              nixfmt
             ];
-            script = ''
-              biome ci
+            forEach = ''
+              nixfmt --check "$file"
             '';
           };
 
@@ -106,6 +178,7 @@
               ./action.yaml
               ./.github/workflows
             ];
+            filter = file: file.hasExt "yaml";
             packages = with pkgs; [
               action-validator
               zizmor
@@ -127,83 +200,25 @@
             '';
           };
 
-          nix = {
+          biome = {
             root = ./.;
-            filter = file: file.hasExt "nix";
+            filter = file: file.hasExt "ts" || file.hasExt "js" || file.hasExt "json";
+            include = ./.gitignore;
             packages = with pkgs; [
-              nixfmt
+              biome
             ];
-            forEach = ''
-              nixfmt --check "$file"
+            script = ''
+              biome ci
             '';
           };
 
-          prettier = {
-            root = ./.;
-            filter = file: file.hasExt "yaml" || file.hasExt "md";
-            packages = with pkgs; [
-              prettier
-            ];
-            forEach = ''
-              prettier --check "$file"
+          node = {
+            src = self.packages.${system}.default;
+            script = ''
+              npm test
             '';
           };
         };
-
-        formatter = pkgs.treefmt.withConfig {
-          configFile = ./treefmt.toml;
-          runtimeInputs = with pkgs; [
-            biome
-            nixfmt
-            prettier
-          ];
-        };
-
-        packages.default = pkgs.buildNpmPackage (
-          final: with pkgs.lib; {
-            pname = "node-template";
-            version = "0.6.10";
-
-            src = fileset.toSource {
-              root = ./.;
-              fileset = fileset.unions [
-                ./.npmrc
-                ./package.json
-                ./package-lock.json
-                ./rolldown.config.ts
-                ./tsconfig.json
-                ./src
-                ./tests
-              ];
-            };
-
-            nodejs = pkgs.nodejs_24;
-            npmConfigHook = pkgs.importNpmLock.npmConfigHook;
-            npmDeps = pkgs.importNpmLock {
-              npmRoot = final.src;
-            };
-
-            meta = {
-              mainProgram = "node-template";
-              description = "A template for node.js projects";
-              license = licenses.mit;
-              platforms = platforms.all;
-              badPlatforms = [ systems.inspect.platformPatterns.isStatic ];
-              homepage = "https://github.com/spotdemo4/node-template";
-              changelog = "https://github.com/spotdemo4/node-template/releases/tag/v${final.version}";
-            };
-          }
-        );
-
-        images.default = pkgs.mkImage {
-          src = self.packages.${system}.default;
-        };
-
-        appimages.default = pkgs.mkAppImage {
-          src = self.packages.${system}.default;
-        };
-
-        schemas = trev.schemas;
       }
     );
 }
