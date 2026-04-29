@@ -16,16 +16,9 @@ part of [spotdemo4/templates](https://github.com/spotdemo4/templates)
 
 ## getting started
 
-enter the development environment:
-
 ```elm
 nix develop
-```
-
-then install dependencies:
-
-```elm
-npm i
+npm install
 ```
 
 ### run
