@@ -13,8 +13,8 @@
   inputs = {
     systems.url = "github:spotdemo4/systems";
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    trev = {
-      url = "github:spotdemo4/nur";
+    trevpkgs = {
+      url = "github:spotdemo4/trevpkgs";
       inputs.systems.follows = "systems";
       inputs.nixpkgs.follows = "nixpkgs";
     };
@@ -23,10 +23,10 @@
   outputs =
     {
       self,
-      trev,
+      trevpkgs,
       ...
     }:
-    trev.libs.mkFlake (
+    trevpkgs.libs.mkFlake (
       system: pkgs: {
 
         # nix develop [#...]
