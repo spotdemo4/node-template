@@ -34,7 +34,7 @@
   "languages": {
     "TypeScript": {
       "format_on_save": "on",
-      "language_servers": ["tsgo", "vtsls", "oxlint", "oxfmt", "tailwindcss-language-server"],
+      "language_servers": ["tsgo", "oxlint", "oxfmt", "tailwindcss-language-server"],
       "prettier": {
         "allowed": false
       },
@@ -51,7 +51,7 @@
     },
     "TSX": {
       "format_on_save": "on",
-      "language_servers": ["tsgo", "vtsls", "oxlint", "oxfmt", "tailwindcss-language-server"],
+      "language_servers": ["tsgo", "oxlint", "oxfmt", "tailwindcss-language-server"],
       "prettier": {
         "allowed": false
       },
