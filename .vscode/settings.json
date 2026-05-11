@@ -1,50 +1,41 @@
 {
-	"editor.defaultFormatter": "esbenp.prettier-vscode",
-	"editor.formatOnSave": true,
-	"files.associations": {
-		"renovate.json": "jsonc",
-		".envrc.project": "dotenv",
-		".envrc": "dotenv"
-	},
+  "files.associations": {
+    "renovate.json": "jsonc",
+    ".envrc.project": "dotenv",
+    ".envrc": "dotenv",
+    "*.css": "tailwindcss"
+  },
 
-	// nix
-	"nix.enableLanguageServer": true,
-	"nix.serverPath": "nixd",
-	"nix.serverSettings": {
-		"nixd": {
-			"nixpkgs": {
-				"expr": "(builtins.getFlake (builtins.toString ./.)).outputs.nixpkgs.${builtins.currentSystem}"
-			}
-		}
-	},
-	"[nix]": {
-		"editor.defaultFormatter": "jnoortheen.nix-ide"
-	},
+  "explorer.fileNesting.patterns": {
+    ".envrc.project": ".envrc",
+    "flake.nix": "flake.lock,treefmt.toml",
+    "README.md": "*.md,LICENSE",
+    "package.json": "package-lock.json,.npmrc"
+  },
 
-	// json
-	"json.schemaDownload.trustedDomains": {
-		"https://docs.renovatebot.com/": true
-	},
+  "json.schemaDownload.trustedDomains": {
+    "https://docs.renovatebot.com/": true
+  },
 
-	// biome
-	"biome.enabled": true,
-	"editor.codeActionsOnSave": {
-		"source.fixAll.biome": "explicit",
-		"source.organizeImports.biome": "explicit"
-	},
-	"[javascript]": {
-		"editor.defaultFormatter": "biomejs.biome"
-	},
-	"[typescript]": {
-		"editor.defaultFormatter": "biomejs.biome"
-	},
-	"[typescriptreact]": {
-		"editor.defaultFormatter": "biomejs.biome"
-	},
-	"[json]": {
-		"editor.defaultFormatter": "biomejs.biome"
-	},
-	"[jsonc]": {
-		"editor.defaultFormatter": "biomejs.biome"
-	}
+  // oxc.oxc-vscode
+  "editor.defaultFormatter": "oxc.oxc-vscode",
+  "editor.formatOnSave": true,
+  "editor.formatOnSaveMode": "file",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.oxc": "always" // oxlint
+  },
+
+  // jnoortheen.nix-ide
+  "[nix]": {
+    "editor.defaultFormatter": "jnoortheen.nix-ide"
+  },
+  "nix.enableLanguageServer": true,
+  "nix.serverPath": "nixd",
+  "nix.serverSettings": {
+    "nixd": {
+      "nixpkgs": {
+        "expr": "(builtins.getFlake (builtins.toString ./.)).outputs.nixpkgs.${builtins.currentSystem}"
+      }
+    }
+  }
 }

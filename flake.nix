@@ -38,13 +38,14 @@
               nodejs_24
 
               # lint
-              biome
+              oxlint
               nixd
+              nil
 
               # format
-              treefmt
-              prettier
+              oxfmt
               nixfmt
+              treefmt
 
               # util
               bumper
@@ -73,16 +74,16 @@
 
           vulnerable = pkgs.mkShell {
             packages = with pkgs; [
+              nodejs_24 # npm audit
               flake-checker # nix
               zizmor # actions
-              nodejs_24 # npm audit
             ];
           };
         };
 
         # nix run [#...]
         apps = pkgs.mkApps {
-          default = "npm run dev";
+          dev = "npm run dev";
         };
 
         # nix build [#...]
@@ -96,8 +97,10 @@
                 root = ./.;
                 fileset = fileset.unions [
                   ./.npmrc
-                  ./package.json
+                  ./.oxfmtrc.json
+                  ./.oxlintrc.json
                   ./package-lock.json
+                  ./package.json
                   ./rolldown.config.ts
                   ./tsconfig.json
                   ./src
@@ -110,6 +113,16 @@
               npmDeps = pkgs.importNpmLock {
                 npmRoot = final.src;
               };
+
+              nativeCheckInputs = with pkgs; [
+                oxfmt
+                oxlint
+              ];
+              checkPhase = ''
+                oxfmt --check
+                oxlint --deny-warnings
+                npm test
+              '';
 
               meta = {
                 mainProgram = "node-template";
@@ -142,22 +155,17 @@
         formatter = pkgs.treefmt.withConfig {
           configFile = ./treefmt.toml;
           runtimeInputs = with pkgs; [
-            prettier
+            oxfmt
             nixfmt
-            biome
           ];
         };
 
         # nix flake check
         checks = pkgs.mkChecks {
-          prettier = {
-            root = ./.;
-            filter = file: file.hasExt "yaml" || file.hasExt "md";
-            packages = with pkgs; [
-              prettier
-            ];
-            forEach = ''
-              prettier --check "$file"
+          node = self.packages.${system}.default.overrideAttrs {
+            dontBuild = true;
+            installPhase = ''
+              touch $out
             '';
           };
 
@@ -167,7 +175,7 @@
             packages = with pkgs; [
               nixfmt
             ];
-            forEach = ''
+            script = ''
               nixfmt --check "$file"
             '';
           };
@@ -183,7 +191,7 @@
               action-validator
               zizmor
             ];
-            forEach = ''
+            script = ''
               action-validator "$file"
               zizmor --offline "$file"
             '';
@@ -200,22 +208,14 @@
             '';
           };
 
-          biome = {
+          config = {
             root = ./.;
-            filter = file: file.hasExt "ts" || file.hasExt "js" || file.hasExt "json";
-            include = ./.gitignore;
+            filter = file: file.hasExt "json" || file.hasExt "yaml" || file.hasExt "toml" || file.hasExt "md";
             packages = with pkgs; [
-              biome
+              oxfmt
             ];
             script = ''
-              biome ci
-            '';
-          };
-
-          node = {
-            src = self.packages.${system}.default;
-            script = ''
-              npm test
+              oxfmt --check
             '';
           };
         };
