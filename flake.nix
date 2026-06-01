@@ -130,8 +130,9 @@
                 license = licenses.mit;
                 platforms = platforms.all;
                 badPlatforms = [ systems.inspect.platformPatterns.isStatic ];
-                homepage = "https://github.com/spotdemo4/node-template";
-                changelog = "https://github.com/spotdemo4/node-template/releases/tag/v${final.version}";
+                homepage = "https://trev.zip/template/node";
+                changelog = "https://trev.zip/template/node/releases";
+                downloadPage = "https://trev.zip/template/node/releases/tag/v${final.version}";
               };
             }
           );
@@ -180,12 +181,21 @@
             '';
           };
 
-          actions = {
+          action = {
             root = ./.;
-            files = [
-              ./action.yaml
-              ./.github/workflows
+            file = ./action.yaml;
+            packages = with pkgs; [
+              action-validator
+              zizmor
             ];
+            script = ''
+              action-validator "$file"
+              zizmor --offline "$file"
+            '';
+          };
+
+          actions-gh = {
+            root = ./.github/workflows;
             filter = file: file.hasExt "yaml";
             packages = with pkgs; [
               action-validator
@@ -197,9 +207,31 @@
             '';
           };
 
-          renovate = {
+          actions-fj = {
+            root = ./.forgejo/workflows;
+            filter = file: file.hasExt "yaml";
+            packages = with pkgs; [
+              zizmor
+            ];
+            script = ''
+              zizmor --offline "$file"
+            '';
+          };
+
+          renovate-gh = {
             root = ./.github;
             files = ./.github/renovate.json;
+            packages = with pkgs; [
+              renovate
+            ];
+            script = ''
+              renovate-config-validator renovate.json
+            '';
+          };
+
+          renovate-fj = {
+            root = ./.forgejo;
+            files = ./.forgejo/renovate.json;
             packages = with pkgs; [
               renovate
             ];

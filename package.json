@@ -4,7 +4,7 @@
   "description": "node.js template",
   "license": "MIT",
   "repository": {
-    "url": "https://github.com/spotdemo4/node-template"
+    "url": "https://trev.zip/template/node"
   },
   "bin": {
     "node-template": "build/index.js"
