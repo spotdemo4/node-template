@@ -16,17 +16,17 @@ jobs:
       - name: Initialize
         uses: spotdemo4/nix-init@d4c575df910b35487710048791c2ae11eefbac3e # v1.48.0
         with:
-          token: ${{ secrets.DOCTOR_TOKEN }}
           github_token: ${{ secrets.GH_TOKEN }}
+          token: ${{ secrets.DOCTOR_TOKEN }}
           niks3_url: https://niks3.trev.zip
-          fetch_depth: 0
           shell: release
+          fetch_depth: 0
 
       - name: Release to Forgejo
         run: flake-release
         env:
-          GITHUB_TOKEN: ${{ secrets.DOCTOR_TOKEN }}
           REGISTRY: trev.zip
+          GITHUB_TOKEN: ${{ secrets.DOCTOR_TOKEN }}
           REGISTRY_PASSWORD: ${{ secrets.PACKAGE_TOKEN }}
           DELETE_OLD_RELEASE_ARTIFACTS: true
           PACKAGES: |
@@ -37,5 +37,12 @@ jobs:
             images.x86_64-linux.default.aarch64-unknown-linux-gnu
             images.x86_64-linux.default.armv7l-unknown-linux-gnueabihf
 
-      - name: Release to npm
-        run: npm publish --access public
+      - name: Release to NPM
+        env:
+          SERVER_URL: ${{ forgejo.SERVER_URL }}
+          REPOSITORY_OWNER: ${{ forgejo.REPOSITORY_OWNER }}
+          PACKAGE_TOKEN: ${{ secrets.PACKAGE_TOKEN }}
+        run: | # zizmor: ignore[use-trusted-publishing]
+          npm config set registry "${SERVER_URL}/api/packages/${REPOSITORY_OWNER}/npm/"
+          npm config set "//trev.zip/api/packages/${REPOSITORY_OWNER}/npm/:_authToken=${PACKAGE_TOKEN}"
+          npm publish --registry="${SERVER_URL}/api/packages/${REPOSITORY_OWNER}/npm/"
