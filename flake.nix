@@ -183,7 +183,7 @@
 
           action = {
             root = ./.;
-            file = ./action.yaml;
+            files = ./action.yaml;
             packages = with pkgs; [
               action-validator
               zizmor
