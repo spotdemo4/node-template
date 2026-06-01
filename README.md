@@ -1,8 +1,8 @@
 # node.js template
 
-[![check](https://img.shields.io/github/actions/workflow/status/spotdemo4/node-template/check.yaml?branch=main&logo=github&logoColor=%23bac2de&label=check&labelColor=%23313244)](https://github.com/spotdemo4/node-template/actions/workflows/check.yaml)
-[![vulnerable](https://img.shields.io/github/actions/workflow/status/spotdemo4/node-template/vulnerable.yaml?branch=main&logo=github&logoColor=%23bac2de&label=vulnerable&labelColor=%23313244)](https://github.com/spotdemo4/node-template/actions/workflows/vulnerable.yaml)
-[![node](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fspotdemo4%2Fnode-template%2Frefs%2Fheads%2Fmain%2Fpackage.json&query=%24.engines.node&logo=nodedotjs&logoColor=%23bac2de&label=version&labelColor=%23313244&color=%23339933)](https://nodejs.org/en/about/previous-releases)
+[![check](https://trev.zip/template/node/actions/workflows/check.yaml/badge.svg?branch=main&logo=forgejo&logoColor=%23bac2de&label=check&labelColor=%23313244)](https://trev.zip/template/node/actions?workflow=check.yaml)
+[![vulnerable](https://trev.zip/template/node/actions/workflows/vulnerable.yaml/badge.svg?branch=main&logo=forgejo&logoColor=%23bac2de&label=vulnerable&labelColor=%23313244)](https://trev.zip/template/node/actions?workflow=vulnerable.yaml)
+[![node](https://img.shields.io/badge/dynamic/json?url=https://trev.zip/template/node/raw/branch/main/package.json&query=%24.engines.node&logo=nodedotjs&logoColor=%23bac2de&label=version&labelColor=%23313244&color=%23339933)](https://nodejs.org/en/about/previous-releases)
 
 template for starting [node.js](https://nodejs.org) projects
 
@@ -14,73 +14,64 @@ part of [spotdemo4/templates](https://github.com/spotdemo4/templates)
 
 ## getting started
 
-```elm
-nix develop
-npm install
+```sh
+nix develop && npm install
 ```
 
 ### run
 
-```elm
+```sh
 nix run #dev
 ```
 
 ### format
 
-```elm
+```sh
 nix fmt
 ```
 
 ### check
 
-```elm
+```sh
 nix flake check
 ```
 
 ### build
 
-```elm
+```sh
 nix build
 ```
 
 ### release
 
-```elm
-bumper "README.md"
+```sh
+bumper
 ```
 
 releases are automatically created for [significant](https://www.conventionalcommits.org/en/v1.0.0/#summary) changes
 
 ## use
 
-### download
-
-| Architecture | Download                                                                                                                                        |
-| ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| amd64        | [node-template_0.6.11_amd64.AppImage](https://github.com/spotdemo4/node-template/releases/download/v0.6.11/node-template_0.6.11_amd64.AppImage) |
-| arm64        | [node-template_0.6.11_arm64.AppImage](https://github.com/spotdemo4/node-template/releases/download/v0.6.11/node-template_0.6.11_arm64.AppImage) |
-| arm          | [node-template_0.6.11_arm.AppImage](https://github.com/spotdemo4/node-template/releases/download/v0.6.11/node-template_0.6.11_arm.AppImage)     |
-
 ### npm
 
-```elm
+```sh
 npx spotdemo4/node-template
 ```
 
 ### docker
 
-```elm
-docker run ghcr.io/spotdemo4/node-template:0.6.11
+```sh
+docker run trev.zip/template/node:latest
 ```
 
 ### nix
 
-```elm
-nix run github:spotdemo4/node-template
+```sh
+nix run git+https://trev.zip/template/node.git
 ```
 
 ### action
 
 ```yaml
-- uses: spotdemo4/node-template@v0.6.11
+- uses: spotdemo4/node-template@main
 ```
