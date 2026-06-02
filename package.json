@@ -1,5 +1,5 @@
 {
-  "name": "@spotdemo4/node-template",
+  "name": "node-template",
   "version": "0.6.12",
   "description": "node.js template",
   "license": "MIT",
