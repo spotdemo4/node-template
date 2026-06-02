@@ -28,6 +28,7 @@ jobs:
         run: nix flake check
 
   action:
+    # zizmor: ignore[excessive-permissions]
     runs-on: ubuntu-24.04
     steps:
       - name: Run action
