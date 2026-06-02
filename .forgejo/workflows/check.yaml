@@ -26,3 +26,9 @@ jobs:
 
       - name: Check
         run: nix flake check
+
+  action:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Run action
+        uses: spotdemo4/node-template@main # zizmor: ignore[unpinned-uses]
