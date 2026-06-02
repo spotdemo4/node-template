@@ -55,7 +55,7 @@ releases are automatically created for [significant](https://www.conventionalcom
 ### npm
 
 ```sh
-registry=https://trev.zip/api/packages/template/npm/ \
+NPM_CONFIG_REGISTRY=https://trev.zip/api/packages/template/npm/ \
     npx node-template
 ```
 
