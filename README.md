@@ -21,7 +21,7 @@ nix develop && npm install
 ### run
 
 ```sh
-nix run #dev
+nix run .#dev
 ```
 
 ### format
