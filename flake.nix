@@ -96,7 +96,6 @@
               src = fileset.toSource {
                 root = ./.;
                 fileset = fileset.unions [
-                  ./.npmrc
                   ./.oxfmtrc.json
                   ./.oxlintrc.json
                   ./package-lock.json
