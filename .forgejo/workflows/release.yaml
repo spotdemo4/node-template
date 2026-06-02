@@ -31,11 +31,7 @@ jobs:
           DELETE_OLD_RELEASE_ARTIFACTS: true
           PACKAGES: |
             appimages.x86_64-linux.default.x86_64-unknown-linux-gnu
-            appimages.x86_64-linux.default.aarch64-unknown-linux-gnu
-            appimages.x86_64-linux.default.armv7l-unknown-linux-gnueabihf
             images.x86_64-linux.default.x86_64-unknown-linux-gnu
-            images.x86_64-linux.default.aarch64-unknown-linux-gnu
-            images.x86_64-linux.default.armv7l-unknown-linux-gnueabihf
 
       - name: Release to NPM
         env:
