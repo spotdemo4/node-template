@@ -75,3 +75,7 @@ nix run git+https://trev.zip/template/node.git
 ```yaml
 - uses: spotdemo4/node-template@main
 ```
+
+### download
+
+https://trev.zip/template/node/releases
