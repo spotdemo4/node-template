@@ -55,7 +55,8 @@ releases are automatically created for [significant](https://www.conventionalcom
 ### npm
 
 ```sh
-npx spotdemo4/node-template
+registry=https://trev.zip/api/packages/template/npm/ \
+    npx node-template
 ```
 
 ### docker
