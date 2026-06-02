@@ -39,7 +39,7 @@ jobs:
           REPOSITORY_OWNER: ${{ forgejo.REPOSITORY_OWNER }}
           PACKAGE_TOKEN: ${{ secrets.PACKAGE_TOKEN }}
         run: | # zizmor: ignore[use-trusted-publishing]
-          npm config set registry "${SERVER_URL}/api/packages/${REPOSITORY_OWNER}/npm/"
+          npm config set @trev:registry "${SERVER_URL}/api/packages/${REPOSITORY_OWNER}/npm/"
           npm config set "//trev.zip/api/packages/${REPOSITORY_OWNER}/npm/:_authToken=${PACKAGE_TOKEN}"
           npm ci
-          npm publish --registry="${SERVER_URL}/api/packages/${REPOSITORY_OWNER}/npm/"
+          npm publish --scope=@trev --registry="${SERVER_URL}/api/packages/${REPOSITORY_OWNER}/npm/"
