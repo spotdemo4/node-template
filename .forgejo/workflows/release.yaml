@@ -41,4 +41,5 @@ jobs:
         run: | # zizmor: ignore[use-trusted-publishing]
           npm config set registry "${SERVER_URL}/api/packages/${REPOSITORY_OWNER}/npm/"
           npm config set "//trev.zip/api/packages/${REPOSITORY_OWNER}/npm/:_authToken=${PACKAGE_TOKEN}"
+          npm ci
           npm publish --registry="${SERVER_URL}/api/packages/${REPOSITORY_OWNER}/npm/"
