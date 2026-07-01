@@ -31,4 +31,4 @@ jobs:
       id-token: write
     steps:
       - name: Run action
-        uses: spotdemo4/node-template@main # zizmor: ignore[unpinned-uses]
+        uses: ./. # zizmor: ignore[unpinned-uses]
