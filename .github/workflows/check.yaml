@@ -14,17 +14,6 @@ permissions:
   contents: read
 
 jobs:
-  check:
-    runs-on: ubuntu-24.04
-    permissions:
-      id-token: write
-    steps:
-      - name: Initialize
-        uses: spotdemo4/nix-init@1443d93dfa3ca2f043b37f848631d6ac5563b0ec # v1.56.0
-
-      - name: Check
-        run: nix flake check
-
   action:
     runs-on: ubuntu-24.04
     permissions:
@@ -37,3 +26,14 @@ jobs:
 
       - name: Run action
         uses: ./. # zizmor: ignore[unpinned-uses]
+
+  check:
+    runs-on: ubuntu-24.04
+    permissions:
+      id-token: write
+    steps:
+      - name: Initialize
+        uses: spotdemo4/nix-init@1443d93dfa3ca2f043b37f848631d6ac5563b0ec # v1.56.0
+
+      - name: Check
+        run: nix flake check
