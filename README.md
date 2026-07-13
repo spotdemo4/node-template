@@ -15,7 +15,9 @@ part of [spotdemo4/templates](https://github.com/spotdemo4/templates)
 ## getting started
 
 ```sh
-nix develop && npm install
+nix develop
+./init.sh "Title" "Description"
+npm install
 ```
 
 ### run
