@@ -7,7 +7,7 @@
   "platform": "forgejo",
   "endpoint": "https://trev.zip/api/v1",
   "repositories": ["template/node"],
-  "allowedCommands": ["npm audit fix"],
+  "allowedCommands": ["^npm audit fix$"],
 
   // repository
   "extends": ["config:recommended"],

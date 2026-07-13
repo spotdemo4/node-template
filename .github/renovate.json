@@ -6,7 +6,7 @@
   "requireConfig": "ignored",
   "platform": "github",
   "repositories": ["spotdemo4/node-template"],
-  "allowedCommands": ["npm audit fix"],
+  "allowedCommands": ["^npm audit fix$"],
 
   // repository
   "extends": ["config:recommended"],
