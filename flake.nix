@@ -83,7 +83,12 @@
 
         # nix run [#...]
         apps = pkgs.mkApps {
-          dev = "npm run dev";
+          dev = {
+            script = "npm run dev";
+            packages = with pkgs; [
+              nodejs_24
+            ];
+          };
         };
 
         # nix build [#...]
