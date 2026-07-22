@@ -27,6 +27,9 @@
       "settings": {
         "nixpkgs": {
           "expr": "(builtins.getFlake (builtins.toString ./.)).outputs.nixpkgs.${builtins.currentSystem}"
+        },
+        "formatting": {
+          "command": ["nixfmt"]
         }
       }
     }
@@ -118,6 +121,17 @@
         {
           "language_server": {
             "name": "oxfmt"
+          }
+        }
+      ]
+    },
+    "Nix": {
+      "format_on_save": "on",
+      "language_servers": ["nixd"],
+      "formatter": [
+        {
+          "language_server": {
+            "name": "nixd"
           }
         }
       ]
