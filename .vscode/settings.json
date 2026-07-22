@@ -1,10 +1,11 @@
 {
   "files.associations": {
     "renovate.json": "jsonc",
-    ".envrc.project": "dotenv",
-    ".envrc": "dotenv",
+    ".envrc*": "shellscript",
     "*.css": "tailwindcss"
   },
+
+  "editor.semanticHighlighting.enabled": true,
 
   "explorer.fileNesting.patterns": {
     ".envrc.project": ".envrc",
@@ -24,6 +25,9 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.oxc": "always" // oxlint
   },
+
+  // esbenp.prettier-vscode
+  "prettier.enable": false,
 
   // jnoortheen.nix-ide
   "[nix]": {

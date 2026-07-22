@@ -13,8 +13,7 @@
           "configPath": null,
           "run": "onType",
           "disableNestedConfig": false,
-          "fixKind": "safe_fix",
-          "unusedDisableDirectives": "deny"
+          "fixKind": "safe_fix"
         }
       }
     },
