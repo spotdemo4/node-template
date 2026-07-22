@@ -1,5 +1,8 @@
 {
   "semantic_tokens": "combined",
+  "prettier": {
+    "allowed": false
+  },
   "file_types": {
     "Shell Script": [".envrc*"]
   },
@@ -38,9 +41,6 @@
     "TypeScript": {
       "format_on_save": "on",
       "language_servers": ["typescript-ls", "oxlint", "oxfmt"],
-      "prettier": {
-        "allowed": false
-      },
       "formatter": [
         {
           "language_server": {
@@ -55,9 +55,6 @@
     "TSX": {
       "format_on_save": "on",
       "language_servers": ["typescript-ls", "oxlint", "oxfmt"],
-      "prettier": {
-        "allowed": false
-      },
       "formatter": [
         {
           "language_server": {
@@ -72,9 +69,6 @@
     "JSON": {
       "format_on_save": "on",
       "language_servers": ["json-language-server", "oxfmt"],
-      "prettier": {
-        "allowed": false
-      },
       "formatter": [
         {
           "language_server": {
@@ -86,9 +80,6 @@
     "JSONC": {
       "format_on_save": "on",
       "language_servers": ["json-language-server", "oxfmt"],
-      "prettier": {
-        "allowed": false
-      },
       "formatter": [
         {
           "language_server": {
@@ -100,9 +91,6 @@
     "YAML": {
       "format_on_save": "on",
       "language_servers": ["yaml-language-server", "oxfmt"],
-      "prettier": {
-        "allowed": false
-      },
       "formatter": [
         {
           "language_server": {
@@ -114,9 +102,6 @@
     "TOML": {
       "format_on_save": "on",
       "language_servers": ["tombi", "oxfmt"],
-      "prettier": {
-        "allowed": false
-      },
       "formatter": [
         {
           "language_server": {
@@ -139,9 +124,6 @@
     "Markdown": {
       "format_on_save": "on",
       "language_servers": ["oxfmt"],
-      "prettier": {
-        "allowed": false
-      },
       "formatter": [
         {
           "language_server": {
