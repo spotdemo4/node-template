@@ -36,18 +36,20 @@
             packages = with pkgs; [
               # node
               nodejs_24
-
-              # lint
               oxlint
+              oxfmt
+              typescript-go
+
+              # toml
+              tombi
+
+              # nix
               nixd
               nil
-
-              # format
-              oxfmt
               nixfmt
-              treefmt
 
               # util
+              treefmt
               bumper
             ];
           };
