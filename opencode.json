@@ -2,7 +2,11 @@
   "$schema": "https://opencode.ai/config.json",
   "lsp": {
     "typescript": {
-      "command": ["./node_modules/.bin/tsc", "--lsp", "--stdio"]
+      "command": ["tsc", "--lsp", "--stdio"]
+    },
+    "tombi": {
+      "command": ["tombi", "lsp"],
+      "extensions": [".toml"]
     }
   }
 }
