@@ -51,6 +51,9 @@
     "editor.defaultFormatter": "oxc.oxc-vscode"
   },
 
+  // redhat.vscode-yaml
+  "yaml.format.enable": false,
+
   // jnoortheen.nix-ide
   "nix.enableLanguageServer": true,
   "nix.serverPath": "nixd",
