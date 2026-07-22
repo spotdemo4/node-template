@@ -40,6 +40,12 @@
               oxfmt
               typescript-go
 
+              # json
+              vscode-json-languageserver
+
+              # yaml
+              yaml-language-server
+
               # toml
               tombi
 
