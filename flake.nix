@@ -37,17 +37,12 @@
               # node
               nodejs_24
               oxlint
-              oxfmt
               typescript-go
 
-              # json
-              vscode-json-languageserver
-
-              # yaml
-              yaml-language-server
-
-              # toml
-              tombi
+              vscode-json-languageserver # json
+              yaml-language-server # yaml
+              tombi # toml
+              oxfmt # format
 
               # nix
               nixd

@@ -21,6 +21,9 @@
     "https://models.dev/": true
   },
 
+  // TypeScriptTeam.native-preview
+  "js/ts.experimental.useTsgo": true,
+
   // esbenp.prettier-vscode
   "prettier.enable": false,
 
