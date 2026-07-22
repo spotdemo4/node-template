@@ -4,6 +4,12 @@
     "typescript": {
       "command": ["tsc", "--lsp", "--stdio"]
     },
+    "oxlint": {
+      "command": ["oxlint", "--lsp"]
+    },
+    "nixd": {
+      "command": ["nixd"]
+    },
     "tombi": {
       "command": ["tombi", "lsp"],
       "extensions": [".toml"]
