@@ -34,7 +34,7 @@
   "languages": {
     "TypeScript": {
       "format_on_save": "on",
-      "language_servers": ["tsgo", "oxlint", "oxfmt", "tailwindcss-language-server"],
+      "language_servers": ["typescript-ls", "oxlint", "oxfmt", "tailwindcss-language-server"],
       "prettier": {
         "allowed": false
       },
@@ -51,7 +51,24 @@
     },
     "TSX": {
       "format_on_save": "on",
-      "language_servers": ["tsgo", "oxlint", "oxfmt", "tailwindcss-language-server"],
+      "language_servers": ["typescript-ls", "oxlint", "oxfmt", "tailwindcss-language-server"],
+      "prettier": {
+        "allowed": false
+      },
+      "formatter": [
+        {
+          "language_server": {
+            "name": "oxfmt"
+          }
+        },
+        {
+          "code_action": "source.fixAll.oxc"
+        }
+      ]
+    },
+    "JavaScript": {
+      "format_on_save": "on",
+      "language_servers": ["typescript-ls", "oxlint", "oxfmt", "tailwindcss-language-server"],
       "prettier": {
         "allowed": false
       },
