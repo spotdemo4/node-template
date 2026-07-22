@@ -15,7 +15,10 @@
   },
 
   "json.schemaDownload.trustedDomains": {
-    "https://docs.renovatebot.com/": true
+    "https://raw.githubusercontent.com/": true,
+    "https://docs.renovatebot.com/": true,
+    "https://opencode.ai/": true,
+    "https://models.dev/": true
   },
 
   // esbenp.prettier-vscode
