@@ -84,16 +84,6 @@
           };
         };
 
-        # nix run [#...]
-        apps = pkgs.mkApps {
-          dev = {
-            script = "npm run dev";
-            packages = with pkgs; [
-              nodejs_24
-            ];
-          };
-        };
-
         # nix build [#...]
         packages = {
           default = pkgs.buildNpmPackage (

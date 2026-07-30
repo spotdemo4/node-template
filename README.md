@@ -23,7 +23,7 @@ npm install
 ### run
 
 ```sh
-nix run .#dev
+npm run dev
 ```
 
 ### format
