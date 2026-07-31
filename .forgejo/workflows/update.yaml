@@ -19,12 +19,17 @@ jobs:
     # zizmor: ignore[excessive-permissions]
     runs-on: ubuntu-24.04
     steps:
-      - name: Initialize
+      - id: init
+        name: Initialize
         uses: spotdemo4/nix-init@b1822eb9aa4cd7879d84810e15b184ebefc4fa91 # v1.62.0
         with:
           github_token: ${{ secrets.GH_TOKEN }}
           niks3_url: https://niks3.trev.zip
           dev_shell: update
+
+      - uses: spotdemo4/nix-init/nix-develop@c3672d5aef98aa336b341a6202219a31ee9f8b1a
+        with:
+          target: ".#devShells.${{ steps.init.outputs.system }}.update"
 
       - name: Renovate
         run: renovate
