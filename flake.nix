@@ -111,11 +111,9 @@
               };
 
               nativeCheckInputs = with pkgs; [
-                oxfmt
                 oxlint
               ];
               checkPhase = ''
-                oxfmt --check
                 oxlint --deny-warnings
                 npm test
               '';
@@ -163,6 +161,27 @@
             dontBuild = true;
             installPhase = ''
               touch $out
+            '';
+          };
+
+          oxfmt = {
+            root = ./.;
+            filter =
+              file:
+              file.hasExt "js"
+              || file.hasExt "jsx"
+              || file.hasExt "ts"
+              || file.hasExt "tsx"
+              || file.hasExt "json"
+              || file.hasExt "yaml"
+              || file.hasExt "toml"
+              || file.hasExt "md";
+            include = [ ./.oxfmtrc.json ];
+            packages = with pkgs; [
+              oxfmt
+            ];
+            script = ''
+              oxfmt --check
             '';
           };
 
@@ -235,17 +254,6 @@
             ];
             script = ''
               renovate-config-validator renovate.json
-            '';
-          };
-
-          config = {
-            root = ./.;
-            filter = file: file.hasExt "json" || file.hasExt "yaml" || file.hasExt "toml" || file.hasExt "md";
-            packages = with pkgs; [
-              oxfmt
-            ];
-            script = ''
-              oxfmt --check
             '';
           };
         };

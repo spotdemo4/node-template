@@ -5,7 +5,7 @@ excludes = ["build"]
 [formatter.oxfmt]
 command = "oxfmt"
 options = ["--write"]
-includes = ["*.ts", "*.tsx", "*.json", "*.yaml", "*.toml", "*.md"]
+includes = ["*.js", "*.jsx", "*.ts", "*.tsx", "*.json", "*.yaml", "*.toml", "*.md"]
 
 [formatter.nixfmt]
 command = "nixfmt"
