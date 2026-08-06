@@ -114,8 +114,10 @@
                 oxlint
               ];
               checkPhase = ''
+                runHook preCheck
                 oxlint --deny-warnings
                 npm test
+                runHook postCheck
               '';
 
               meta = {
@@ -160,7 +162,9 @@
           node = self.packages.${system}.default.overrideAttrs {
             dontBuild = true;
             installPhase = ''
+              runHook preInstall
               touch $out
+              runHook postInstall
             '';
           };
 
