@@ -120,6 +120,12 @@
                 runHook postCheck
               '';
 
+              installCheckPhase = ''
+                runHook preInstallCheck
+                test "$("$out/bin/node-template")" = "Hello, world!"
+                runHook postInstallCheck
+              '';
+
               meta = {
                 mainProgram = "node-template";
                 description = "node.js template";
@@ -159,14 +165,7 @@
 
         # nix flake check
         checks = pkgs.mkChecks {
-          node = self.packages.${system}.default.overrideAttrs {
-            dontBuild = true;
-            installPhase = ''
-              runHook preInstall
-              touch $out
-              runHook postInstall
-            '';
-          };
+          inherit (self.packages.${system}) default;
 
           oxfmt = {
             root = ./.;

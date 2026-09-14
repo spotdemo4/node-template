@@ -24,7 +24,7 @@ jobs:
           persist-credentials: false
 
       - name: Run action
-        uses: ./. # zizmor: ignore[unpinned-uses]
+        uses: ./. # zizmor: ignore[unpinned-uses,self-repository]
 
   check:
     # zizmor: ignore[excessive-permissions]
