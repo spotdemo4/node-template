@@ -7,7 +7,7 @@
   "platform": "forgejo",
   "endpoint": "https://trev.zip/api/v1",
   "repositories": ["template/node"],
-  "allowedCommands": ["^npm audit fix$"],
+  "allowedCommands": ["^npm audit fix --audit-level=none$"],
 
   // repository
   "extends": ["config:recommended"],
@@ -21,7 +21,7 @@
     "schedule": ["* * * * 0"], // sunday
     "skipInstalls": false,
     "postUpgradeTasks": {
-      "commands": ["npm audit fix"]
+      "commands": ["npm audit fix --audit-level=none"]
     }
   },
   "packageRules": [
