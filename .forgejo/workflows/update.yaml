@@ -17,7 +17,7 @@ enable-openid-connect: true
 jobs:
   renovate:
     # zizmor: ignore[excessive-permissions]
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
       - id: init
         name: Initialize
