@@ -178,7 +178,9 @@ old_slug=node-template
 old_description='node.js template'
 old_url=https://trev.zip/template/node
 replace_literal "$old_slug" "$slug" package.json package-lock.json flake.nix
-replace_literal '0.6.17' "$version" package.json package-lock.json flake.nix
+sed -i -E "s@^(  \"version\": \")[^\"]*@\1$version@" package.json package-lock.json
+sed -i -E "/^    \"\": \{$/,/^    \},?$/s@^(      \"version\": \")[^\"]*@\1$version@" package-lock.json
+sed -i -E "/^[[:space:]]*pname = \"$slug\";$/,/^[[:space:]]*version = /s@^([[:space:]]*version = \")[^\"]*@\1$version@" flake.nix
 replace_literal 'name: node template' "name: \"$escaped_title\"" action.yaml
 replace_literal 'description: a template for node projects' "description: \"$escaped_description\"" action.yaml
 replace_literal 'author: trev' "author: \"$escaped_git_name\"" action.yaml
