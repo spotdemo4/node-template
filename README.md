@@ -7,53 +7,15 @@
 
 template for starting [node.js](https://nodejs.org) projects
 
+to initialize a new project, run:
+
+```sh
+./init.sh "Title" "Description"
+```
+
 part of [spotdemo4/templates](https://github.com/spotdemo4/templates)
 
-## requirements
-
-- [nix](https://nixos.org/)
-
-## getting started
-
-```sh
-nix develop
-./init.sh "Title" "Description"
-npm install
-```
-
-### run
-
-```sh
-npm run dev
-```
-
-### format
-
-```sh
-nix fmt
-```
-
-### check
-
-```sh
-nix flake check
-```
-
-### build
-
-```sh
-nix build
-```
-
-### release
-
-```sh
-bumper
-```
-
-releases are automatically created for [significant](https://www.conventionalcommits.org/en/v1.0.0/#summary) changes
-
-## use
+## using
 
 ### npm
 
@@ -83,3 +45,7 @@ nix run git+https://trev.zip/template/node.git
 ### download
 
 https://trev.zip/template/node/releases
+
+## contributing
+
+see [CONTRIBUTING.md](CONTRIBUTING.md) for requirements and getting started

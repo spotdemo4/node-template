@@ -209,10 +209,27 @@ encoded_lock_url=${encoded_lock_url//\//%252F}
 nixpkgs_badge="[![nixpkgs](https://img.shields.io/endpoint?url=https%3A%2F%2Fnix-shield.trev.zip%2Fbadge%3Furl%3D${encoded_lock_url}%26input%3Dnixpkgs&logoColor=%23bac2de&labelColor=%23313244&color=%235277C3)](https://nixos.org/)"
 language_badge="[![node](https://img.shields.io/badge/dynamic/json?url=${raw_url}/package.json&query=%24.engines.node&logo=nodedotjs&logoColor=%23bac2de&label=version&labelColor=%23313244&color=%23339933)](https://nodejs.org/en/about/previous-releases)"
 
+readme_sections=$(sed -n '/^## using$/,$p' README.md)
+readme_sections=${readme_sections//"$old_url"/"$web_url"}
+old_npm_command=$'NPM_CONFIG_REGISTRY=https://trev.zip/api/packages/template/npm/ \\\n    npx node-template'
+if $is_github; then
+  npm_command="npx --yes --package=git+$web_url.git $slug"
+  action_ref="$repo_path@main"
+  image="ghcr.io/${repo_path,,}:latest"
+else
+  owner=${repo_path%%/*}
+  npm_command=$'NPM_CONFIG_REGISTRY='"${web_url%/$repo_path}/api/packages/$owner/npm/"$' \\\n    npx '"$slug"
+  action_ref="$web_url@main"
+  image="$host/${repo_path,,}:latest"
+fi
+readme_sections=${readme_sections//"$old_npm_command"/"$npm_command"}
+readme_sections=${readme_sections//trev.zip\/template\/node:latest/"$image"}
+readme_sections=${readme_sections//spotdemo4\/node-template@main/"$action_ref"}
+
 {
   printf '# %s\n\n' "$title"
   printf '%s\n%s\n%s\n%s\n\n' "$check_badge" "$vulnerable_badge" "$nixpkgs_badge" "$language_badge"
-  printf '%s\n' "$description"
+  printf '%s\n\n%s\n' "$description" "$readme_sections"
 } >README.md
 
 remove_checks() {
