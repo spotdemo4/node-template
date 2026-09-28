@@ -29,20 +29,11 @@ jobs:
       - name: Release to Forgejo
         run: flake-release
         env:
-          REGISTRY: trev.zip
           GITHUB_TOKEN: ${{ secrets.DOCTOR_TOKEN }}
-          REGISTRY_PASSWORD: ${{ secrets.PACKAGE_TOKEN }}
-          DELETE_OLD_RELEASE_ARTIFACTS: true
+          PACKAGE_REGISTRY_TOKEN: ${{ secrets.PACKAGE_TOKEN }}
+          CONTAINER_REGISTRY_PASSWORD: ${{ secrets.PACKAGE_TOKEN }}
+          DELETE_OLD_RELEASE_ARTIFACTS: 2
           PACKAGES: |
+            packages.x86_64-linux.default
             appimages.x86_64-linux.default.x86_64-unknown-linux-gnu
             images.x86_64-linux.default.x86_64-unknown-linux-gnu
-
-      - name: Release to NPM
-        env:
-          SERVER_URL: ${{ forgejo.SERVER_URL }}
-          REPOSITORY_OWNER: ${{ forgejo.REPOSITORY_OWNER }}
-          PACKAGE_TOKEN: ${{ secrets.PACKAGE_TOKEN }}
-        run: | # zizmor: ignore[use-trusted-publishing]
-          npm config set "//trev.zip/api/packages/${REPOSITORY_OWNER}/npm/:_authToken=${PACKAGE_TOKEN}"
-          npm ci
-          npm publish --registry="${SERVER_URL}/api/packages/${REPOSITORY_OWNER}/npm/"
