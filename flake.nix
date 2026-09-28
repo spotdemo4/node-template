@@ -95,12 +95,14 @@
                 fileset = fileset.unions [
                   ./.oxfmtrc.json
                   ./.oxlintrc.json
+                  ./LICENSE
                   ./package-lock.json
                   ./package.json
-                  ./vite.config.ts
-                  ./tsconfig.json
+                  ./README.md
                   ./src
                   ./tests
+                  ./tsconfig.json
+                  ./vite.config.ts
                 ];
               };
 
