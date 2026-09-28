@@ -97,7 +97,7 @@
                   ./.oxlintrc.json
                   ./package-lock.json
                   ./package.json
-                  ./rolldown.config.ts
+                  ./vite.config.ts
                   ./tsconfig.json
                   ./src
                   ./tests

@@ -11,17 +11,18 @@
   },
   "type": "module",
   "scripts": {
-    "build": "rolldown -c",
-    "dev": "rolldown -c && node build/index.js",
-    "prepare": "rolldown -c && chmod +x build/index.js",
-    "test": "node --test"
+    "build": "vite build",
+    "dev": "vite build && node build/index.js",
+    "prepare": "vite build && chmod +x build/index.js",
+    "test": "vitest run"
   },
   "devDependencies": {
     "@tsconfig/node-ts": "^23.6.4",
     "@tsconfig/node24": "^24.0.5",
     "@types/node": "^24.19.0",
-    "rolldown": "^1.2.11",
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "vite": "^8.3.1",
+    "vitest": "^5.0.2"
   },
   "engines": {
     "node": ">=24.0.0"
