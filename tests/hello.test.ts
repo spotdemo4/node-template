@@ -1,8 +1,7 @@
-import assert from "node:assert/strict";
-import { test } from "node:test";
+import { expect, test } from "vitest";
 
 import { hello } from "../src/hello.ts";
 
-await test("says hello", () => {
-  assert.equal(hello(), "Hello, world!");
+test("says hello", () => {
+  expect(hello()).toBe("Hello, world!");
 });
