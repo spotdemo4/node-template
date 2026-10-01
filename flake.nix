@@ -62,8 +62,7 @@
 
           release = pkgs.mkShell {
             packages = with pkgs; [
-              flake-release # github
-              nodejs_24 # npm publish
+              flake-release
             ];
           };
 
