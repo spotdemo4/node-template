@@ -35,7 +35,7 @@
             shellHook = pkgs.shellhook.ref;
             packages = with pkgs; [
               # node
-              nodejs_24
+              nodejs_26
               oxlint
               typescript
 
@@ -69,13 +69,13 @@
           update = pkgs.mkShell {
             packages = with pkgs; [
               renovate
-              nodejs_24 # npm install
+              nodejs_26 # npm install
             ];
           };
 
           vulnerable = pkgs.mkShell {
             packages = with pkgs; [
-              nodejs_24 # npm audit
+              nodejs_26 # npm audit
               flake-checker # nix
               zizmor # actions
             ];
@@ -105,7 +105,7 @@
                 ];
               };
 
-              nodejs = pkgs.nodejs_24;
+              nodejs = pkgs.nodejs_26;
               npmConfigHook = pkgs.importNpmLock.npmConfigHook;
               npmDeps = pkgs.importNpmLock {
                 npmRoot = final.src;
