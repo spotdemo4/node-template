@@ -111,12 +111,14 @@
                 npmRoot = final.src;
               };
 
+              doCheck = true;
               checkPhase = ''
                 runHook preCheck
                 npm test
                 runHook postCheck
               '';
 
+              doInstallCheck = true;
               installCheckPhase = ''
                 runHook preInstallCheck
                 test "$("$out/bin/node-template")" = "Hello, world!"
