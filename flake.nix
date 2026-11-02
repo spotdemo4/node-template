@@ -199,6 +199,27 @@
             '';
           };
 
+          init = {
+            root = ./.;
+            packages = with pkgs; [
+              git
+              jq
+              nodejs_26
+              shellcheck
+              self.formatter.${system}
+            ];
+            env.NODE_MODULES = "${
+              pkgs.importNpmLock.buildNodeModules {
+                npmRoot = ./.;
+                nodejs = pkgs.nodejs_26;
+              }
+            }/node_modules";
+            script = ''
+              shellcheck init.sh init.test.sh
+              bash init.test.sh
+            '';
+          };
+
           nix = {
             root = ./.;
             filter = file: file.hasExt "nix";
