@@ -209,12 +209,23 @@ if GIT_TERMINAL_PROMPT=0 git fetch --quiet --no-tags "$old_url" main 2>/dev/null
   done < <(git log --format='%T' HEAD)
 fi
 
+read -r -p 'Is this project a library? [y/N] ' reply || reply=
+if [[ $reply =~ ^[Yy]([Ee][Ss])?$ ]]; then
+  is_library=true
+else
+  is_library=false
+fi
+
 changes_started=true
 rm template.schema.json
 sed -i '/^        # nix flake init /,/^        };$/d' flake.nix
 if [[ -n $template_commit ]]; then
-  printf '{ "$schema": "%s", "url": "%s", "commit": "%s" }\n' \
-    "$old_url/raw/branch/main/template.schema.json" "$old_url" "$template_commit" >.template.json
+  library_field=
+  if $is_library; then
+    library_field=', "library": true'
+  fi
+  printf '{ "$schema": "%s", "url": "%s", "commit": "%s"%s }\n' \
+    "$old_url/raw/branch/main/template.schema.json" "$old_url" "$template_commit" "$library_field" >.template.json
 else
   printf 'Warning: unable to find the template commit; .template.json was not created.\n' >&2
 fi
@@ -231,6 +242,77 @@ replace_literal "$old_url" "$web_url" flake.nix
 replace_literal "$old_description" "$escaped_description" package.json
 replace_literal "$old_url" "$web_url" package.json
 replace_literal 'Copyright (c) 2026 trev' "Copyright (c) $year $git_name" LICENSE
+
+if $is_library; then
+  # A library starts as a module that exports a function, without the command
+  # and the action that runs it.
+  rm action.yaml
+  cat >src/hello.ts <<EOF
+/** Returns a greeting for name. */
+export function hello(name: string): string {
+  return \`Hello, \${name}!\`;
+}
+EOF
+  printf 'export { hello } from "./hello.ts";\n' >src/index.ts
+  cat >tests/hello.test.ts <<EOF
+import { expect, test } from "vitest";
+
+import { hello } from "../src/index.ts";
+
+test("says hello", () => {
+  expect(hello("world")).toBe("Hello, world!");
+});
+EOF
+  cat >tsconfig.build.json <<EOF
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "declaration": true,
+    "outDir": "build",
+    "rootDir": "src"
+  },
+  "include": ["src"]
+}
+EOF
+  cat >vite.config.ts <<EOF
+import { defineConfig } from "vitest/config";
+
+export default defineConfig({
+  test: {
+    include: ["tests/**/*.test.ts"],
+  },
+});
+EOF
+
+  # The package is compiled to build/ with its types instead of bundled into a command
+  sed -i -E '/^  "bin": \{$/,/^  \},$/d; /^    "dev": /d; s@^(    "build": ")[^"]*@\1tsc -p tsconfig.build.json@; s@^(    "prepare": ")[^"]*@\1npm run build@' package.json
+  sed -i 's@^  "type": "module",$@&\n  "exports": {\n    ".": {\n      "types": "./build/index.d.ts",\n      "default": "./build/index.js"\n    }\n  },\n  "files": [\n    "build"\n  ],@' package.json
+  sed -i -E '/^    "": \{$/,/^    \},?$/{/^      "bin": \{$/,/^      \},$/d}' package-lock.json
+  sed -i 's@^\( *\)\./tsconfig\.json$@\1./tsconfig.build.json\n&@' flake.nix
+
+  # There's no program to run, put in an image or an AppImage, or action to check
+  sed -i "/^              doInstallCheck = true;\$/,/^              '';\$/d" flake.nix
+  sed -i -E '/^                (mainProgram|downloadPage) = /d' flake.nix
+  sed -i '/^        # nix build #\(images\|appimages\)/,/^        };$/d' flake.nix
+  sed -i '/^          action = {$/,/^          };$/d' flake.nix
+  sed -i '/^### run$/,/^### format$/{/^### format$/!d}' CONTRIBUTING.md
+
+  # flake-release publishes the package from its source to the package registry,
+  # and only archives the package
+  for workflow in .github/workflows/release.yaml .forgejo/workflows/release.yaml; do
+    if [[ -f $workflow ]]; then
+      sed -i -E '/^            (packages|appimages|images)\.x86_64-linux\.default(\.|$)/d; s/^(          PACKAGES:) \|$/\1 packages.x86_64-linux.default/' "$workflow"
+    fi
+  done
+  if [[ -f .forgejo/workflows/release.yaml ]]; then
+    sed -i '/^          CONTAINER_REGISTRY_PASSWORD: /d' .forgejo/workflows/release.yaml
+  fi
+  for workflow in .github/workflows/check.yaml .forgejo/workflows/check.yaml; do
+    if [[ -f $workflow ]]; then
+      sed -i '/^  action:$/,/^  check:$/{/^  check:$/!d}' "$workflow"
+    fi
+  done
+fi
 
 if [[ ${provider_host,,} == github.com ]]; then
   is_github=true
@@ -251,22 +333,30 @@ encoded_lock_url=${encoded_lock_url//\//%252F}
 nixpkgs_badge="[![nixpkgs](https://img.shields.io/endpoint?url=https%3A%2F%2Fnix-shield.trev.zip%2Fbadge%3Furl%3D${encoded_lock_url}%26input%3Dnixpkgs&logoColor=%23bac2de&labelColor=%23313244&color=%235277C3)](https://nixos.org/)"
 language_badge="[![node](https://img.shields.io/badge/dynamic/json?url=${raw_url}/package.json&query=%24.engines.node&logo=nodedotjs&logoColor=%23bac2de&label=version&labelColor=%23313244&color=%23339933)](https://nodejs.org/en/about/previous-releases)"
 
-readme_sections=$(sed -n '/^## using$/,$p' README.md)
-readme_sections=${readme_sections//"$old_url"/"$web_url"}
 old_npm_command=$'NPM_CONFIG_REGISTRY=https://trev.zip/api/packages/template/npm/ \\\n    npx node-template'
 if $is_github; then
   npm_command="npx --yes --package=git+$web_url.git $slug"
+  npm_install="npm install git+$web_url.git"
   action_ref="$repo_path@main"
   image="ghcr.io/${repo_path,,}:latest"
 else
   owner=${repo_path%%/*}
-  npm_command=$'NPM_CONFIG_REGISTRY='"${web_url%/$repo_path}/api/packages/$owner/npm/"$' \\\n    npx '"$slug"
+  npm_registry="NPM_CONFIG_REGISTRY=${web_url%/$repo_path}/api/packages/$owner/npm/"
+  npm_command="$npm_registry"$' \\\n    npx '"$slug"
+  npm_install="$npm_registry"$' \\\n    npm install '"$slug"
   action_ref="$web_url@main"
   image="$host/${repo_path,,}:latest"
 fi
-readme_sections=${readme_sections//"$old_npm_command"/"$npm_command"}
-readme_sections=${readme_sections//trev.zip\/template\/node:latest/"$image"}
-readme_sections=${readme_sections//spotdemo4\/node-template@main/"$action_ref"}
+if $is_library; then
+  readme_sections=$(sed -n '/^## contributing$/,$p' README.md)
+  printf -v readme_sections '## using\n\n```sh\n%s\n```\n\n%s' "$npm_install" "$readme_sections"
+else
+  readme_sections=$(sed -n '/^## using$/,$p' README.md)
+  readme_sections=${readme_sections//"$old_url"/"$web_url"}
+  readme_sections=${readme_sections//"$old_npm_command"/"$npm_command"}
+  readme_sections=${readme_sections//trev.zip\/template\/node:latest/"$image"}
+  readme_sections=${readme_sections//spotdemo4\/node-template@main/"$action_ref"}
+fi
 
 {
   printf '# %s\n\n' "$title"
