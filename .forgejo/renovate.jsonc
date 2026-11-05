@@ -7,7 +7,6 @@
   "platform": "forgejo",
   "endpoint": "https://trev.zip/api/v1",
   "repositories": ["template/node"],
-  "allowedCommands": ["^npm audit fix --audit-level=none$"],
 
   // repository
   "extends": ["config:recommended"],
@@ -15,14 +14,19 @@
   "nix": {
     "enabled": true
   },
+  // fix PRs for vulnerable direct dependencies, from osv.dev.
+  // transitive vulnerabilities are reported by the vulnerable workflow
+  "osvVulnerabilityAlerts": true,
+  "dependencyDashboardOSVVulnerabilitySummary": "unresolved",
+  "vulnerabilityAlerts": {
+    "addLabels": ["security"],
+    "automerge": true
+  },
   "lockFileMaintenance": {
     "enabled": true,
     "automerge": true,
     "schedule": ["* * * * 0"], // sunday
-    "skipInstalls": false,
-    "postUpgradeTasks": {
-      "commands": ["npm audit fix --audit-level=none"]
-    }
+    "skipInstalls": false
   },
   "packageRules": [
     {
