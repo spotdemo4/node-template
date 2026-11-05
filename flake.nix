@@ -87,7 +87,7 @@
           default = pkgs.buildNpmPackage (
             final: with pkgs.lib; {
               pname = "node-template";
-              version = "0.12.0";
+              version = "0.13.0";
 
               src = fileset.toSource {
                 root = ./.;
