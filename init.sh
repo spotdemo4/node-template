@@ -371,8 +371,8 @@ write_readme() {
   encoded_lock_url="${raw_url}/flake.lock"
   encoded_lock_url=${encoded_lock_url//:/%253A}
   encoded_lock_url=${encoded_lock_url//\//%252F}
-  nixpkgs_badge="[![nixpkgs](https://img.shields.io/endpoint?url=https%3A%2F%2Fnix-shield.trev.zip%2Fbadge%3Furl%3D${encoded_lock_url}%26input%3Dnixpkgs&logoColor=%23bac2de&labelColor=%23313244&color=%235277C3)](https://nixos.org/)"
-  language_badge="[![node](https://img.shields.io/badge/dynamic/json?url=${raw_url}/package.json&query=%24.engines.node&logo=nodedotjs&logoColor=%23bac2de&label=version&labelColor=%23313244&color=%23339933)](https://nodejs.org/en/about/previous-releases)"
+  nixpkgs_badge="[![nixpkgs](https://shields.trev.zip/endpoint?url=https%3A%2F%2Fnix-shield.trev.zip%2Fbadge%3Furl%3D${encoded_lock_url}%26input%3Dnixpkgs&logoColor=%23bac2de&labelColor=%23313244&color=%235277C3)](https://nixos.org/)"
+  language_badge="[![node](https://shields.trev.zip/badge/dynamic/json?url=${raw_url}/package.json&query=%24.engines.node&logo=nodedotjs&logoColor=%23bac2de&label=version&labelColor=%23313244&color=%23339933)](https://nodejs.org/en/about/previous-releases)"
 
   old_npm_command=$'NPM_CONFIG_REGISTRY=https://trev.zip/api/packages/template/npm/ \\\n    npx node-template'
   if $is_github; then
