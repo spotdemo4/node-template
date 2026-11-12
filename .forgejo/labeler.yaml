@@ -17,6 +17,10 @@ javascript:
   - changed-files:
       - any-glob-to-any-file:
           - "**/*.{js,jsx,mjs,cjs}"
+
+node:
+  - changed-files:
+      - any-glob-to-any-file:
           - "**/package.json"
           - "**/package-lock.json"
 
