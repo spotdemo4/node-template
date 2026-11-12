@@ -54,6 +54,11 @@
     },
     {
       "matchManagers": ["npm"],
+      "matchPackageNames": ["@tsconfig/**"],
+      "groupName": "tsconfig"
+    },
+    {
+      "matchManagers": ["npm"],
       "matchDepTypes": ["engines"],
       "enabled": false
     }
