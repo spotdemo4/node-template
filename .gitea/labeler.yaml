@@ -13,9 +13,15 @@ nix:
           - "**/*.nix"
           - "**/flake.lock"
 
-node:
+javascript:
   - changed-files:
       - any-glob-to-any-file:
-          - "**/*.{js,jsx,mjs,cjs,ts,tsx,mts,cts}"
+          - "**/*.{js,jsx,mjs,cjs}"
           - "**/package.json"
           - "**/package-lock.json"
+
+typescript:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.{ts,tsx,mts,cts}"
+          - "**/tsconfig*.json"
