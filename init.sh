@@ -389,6 +389,18 @@ EOF
   done
 }
 
+# Stops flake-release from publishing the program to the package registry,
+# which it does whenever PACKAGE_REGISTRY_TOKEN is set. GitHub keeps
+# "packages: write" to push its container image.
+skip_publishing() {
+  local workflow
+  for workflow in .github/workflows/release.yaml .gitea/workflows/release.yaml .forgejo/workflows/release.yaml; do
+    if [[ -f $workflow ]]; then
+      sed -i '/^          PACKAGE_REGISTRY_TOKEN: /d' "$workflow"
+    fi
+  done
+}
+
 # Replaces the README's title, badges and description, and points its usage
 # instructions at the project.
 write_readme() {
@@ -412,15 +424,19 @@ write_readme() {
   language_badge="[![node](https://shields.trev.zip/badge/dynamic/json?url=${raw_url}/package.json&query=%24.engines.node&logo=nodedotjs&logoColor=%23bac2de&label=version&labelColor=%23313244&color=%23339933)](https://nodejs.org/en/about/previous-releases)"
 
   old_npm_command=$'NPM_CONFIG_REGISTRY=https://trev.zip/api/packages/template/npm/ \\\n    npx node-template'
+  # GitHub's npm registry needs authentication even to install, and a program
+  # that isn't published can only be run from Git
+  npm_command="npx --yes --package=git+$web_url.git $slug"
   if $is_github; then
-    npm_command="npx --yes --package=git+$web_url.git $slug"
     npm_install="npm install git+$web_url.git"
     action_ref="$repo_path@main"
     image="ghcr.io/${repo_path,,}:latest"
   else
     owner=${repo_path%%/*}
     npm_registry="NPM_CONFIG_REGISTRY=${web_url%/"$repo_path"}/api/packages/$owner/npm/"
-    npm_command="$npm_registry"$' \\\n    npx '"$slug"
+    if $is_published; then
+      npm_command="$npm_registry"$' \\\n    npx '"$slug"
+    fi
     npm_install="$npm_registry"$' \\\n    npm install '"$slug"
     action_ref="$web_url@main"
     image="$host/${repo_path,,}:latest"
@@ -572,14 +588,23 @@ main() {
 
   read -r -p 'Is this project a library? [y/N] ' reply || reply=
   is_library=false
+  is_published=true
   if [[ $reply =~ ^[Yy]([Ee][Ss])?$ ]]; then
     is_library=true
+  else
+    read -r -p 'Publish the program to the package registry? [y/N] ' reply || reply=
+    if [[ ! $reply =~ ^[Yy]([Ee][Ss])?$ ]]; then
+      is_published=false
+    fi
   fi
 
   changes_started=true
   apply_metadata
   if $is_library; then
     make_library
+  fi
+  if ! $is_published; then
+    skip_publishing
   fi
   write_readme
   configure_providers

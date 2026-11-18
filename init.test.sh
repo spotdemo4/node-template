@@ -138,8 +138,8 @@ test_application() (
   git add -A
   git commit --quiet --message 'Initial commit'
   # The build sandbox has no /usr/bin/env for the shebang
-  # GitHub (detected), application, no Gitea, Forgejo mirror, Zed, VS Code
-  printf '%s\n' '' n n y https://git.example.com/octo/hello-world '' '' | bash ./init.sh 'Hello World' "$description"
+  # GitHub (detected), published application, no Gitea, Forgejo mirror, Zed, VS Code
+  printf '%s\n' '' n y n y https://git.example.com/octo/hello-world '' '' | bash ./init.sh 'Hello World' "$description"
 
   assert_initialized https://github.com/octo/hello-world hello-world test@example.com
   assert_eq "$(jq -r .library .template.json)" null '.template.json library'
@@ -167,6 +167,8 @@ test_application() (
   assert_contains .forgejo/renovate.jsonc \
     '"endpoint": "https://git.example.com/api/v1"' \
     '"repositories": ["octo/hello-world"]'
+  assert_contains .github/workflows/release.yaml 'packages: write' 'PACKAGE_REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}'
+  assert_contains .forgejo/workflows/release.yaml 'PACKAGE_REGISTRY_TOKEN: ${{ secrets.PACKAGE_TOKEN }}'
   [[ -f src/index.ts && -d .zed && -d .vscode ]] || fail 'application files are missing'
 )
 
@@ -220,8 +222,8 @@ test_gitea() (
   cd "$project"
   git add -A
   git commit --quiet --message 'Initial commit'
-  # Gitea, application, GitHub mirror, no Forgejo, no Zed, no VS Code
-  printf '%s\n' Gitea n y git@github.com:octo/hello-mirror.git n n n | bash ./init.sh 'Hello Gitea' 'Says hello'
+  # Gitea, unpublished application, GitHub mirror, no Forgejo, no Zed, no VS Code
+  printf '%s\n' Gitea n n y git@github.com:octo/hello-mirror.git n n n | bash ./init.sh 'Hello Gitea' 'Says hello'
 
   assert_initialized https://gitea.example.com/octo/hello-gitea hello-gitea test@example.com
   assert_eq "$(git remote)" $'github\norigin' remotes
@@ -230,8 +232,9 @@ test_gitea() (
   assert_contains README.md \
     'https://gitea.example.com/octo/hello-gitea/actions?workflow=check.yaml' \
     'logo=gitea' \
-    'NPM_CONFIG_REGISTRY=https://gitea.example.com/api/packages/octo/npm/' \
+    'npx --yes --package=git+https://gitea.example.com/octo/hello-gitea.git hello-gitea' \
     'docker run gitea.example.com/octo/hello-gitea:latest'
+  assert_lacks README.md NPM_CONFIG_REGISTRY
   assert_contains flake.nix 'actions-gt = {' 'renovate-gt = {' 'actions-gh = {' 'renovate-gh = {'
   assert_lacks flake.nix 'actions-fj = {' 'renovate-fj = {'
   assert_contains .gitea/renovate.jsonc \
@@ -239,6 +242,10 @@ test_gitea() (
     '"endpoint": "https://gitea.example.com/api/v1"' \
     '"repositories": ["octo/hello-gitea"]'
   assert_contains .github/renovate.jsonc '"repositories": ["octo/hello-mirror"]'
+  assert_contains .github/workflows/release.yaml 'packages: write' 'images.x86_64-linux'
+  assert_contains .gitea/workflows/release.yaml CONTAINER_REGISTRY_PASSWORD
+  assert_lacks .github/workflows/release.yaml PACKAGE_REGISTRY_TOKEN
+  assert_lacks .gitea/workflows/release.yaml PACKAGE_REGISTRY_TOKEN
 )
 
 test_rollback() (
@@ -262,9 +269,9 @@ test_rollback() (
 
   # Mirror URLs are read after the template has been changed
   assert_fails 'Unsupported repository URL.' \
-    bash ./init.sh Rollback Rollback < <(printf '%s\n' '' n n y ftp://git.example.com/octo/rollback)
+    bash ./init.sh Rollback Rollback < <(printf '%s\n' '' n n n y ftp://git.example.com/octo/rollback)
   assert_fails 'Gitea repository URL cannot use github.com.' \
-    bash ./init.sh Rollback Rollback < <(printf '%s\n' github n y https://github.com/octo/rollback)
+    bash ./init.sh Rollback Rollback < <(printf '%s\n' github n n y https://github.com/octo/rollback)
   assert_eq "$(git rev-parse HEAD)" "$head" HEAD
   assert_eq "$(git status --porcelain --untracked-files=all)" '' 'worktree status'
   assert_missing "$tmp"/.rollback.git-*
