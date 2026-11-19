@@ -185,8 +185,6 @@
 
         # nix flake check
         checks = pkgs.mkChecks {
-          inherit (self.packages.${system}) default;
-
           node-lint = {
             src = self.packages.${system}.default;
             packages = with pkgs; [
