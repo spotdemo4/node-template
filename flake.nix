@@ -32,7 +32,7 @@
         # nix develop [#...]
         devShells = {
           default = pkgs.mkShell {
-            shellHook = pkgs.shellhook.ref;
+            shellHook = pkgs.trev.shellhook.ref;
             packages = with pkgs; [
               # node
               nodejs_26
@@ -50,25 +50,25 @@
 
               # util
               treefmt
-              bumper
+              trev.bumper
             ];
           };
 
           bump = pkgs.mkShell {
             packages = with pkgs; [
-              bumper
+              trev.bumper
             ];
           };
 
           release = pkgs.mkShell {
             packages = with pkgs; [
-              flake-release
+              trev.flake-release
             ];
           };
 
           update = pkgs.mkShell {
             packages = with pkgs; [
-              renovate
+              trev.renovate
               nodejs_26 # npm install
             ];
           };
@@ -143,14 +143,14 @@
 
         # nix build #images.[...]
         images = {
-          default = pkgs.mkImage {
+          default = pkgs.trev.libs.mkImage {
             src = self.packages.${system}.default;
           };
         };
 
         # nix build #appimages.[...]
         appimages = {
-          default = pkgs.mkAppImage {
+          default = pkgs.trev.libs.mkAppImage {
             src = self.packages.${system}.default;
           };
         };
@@ -184,7 +184,7 @@
         };
 
         # nix flake check
-        checks = pkgs.mkChecks {
+        checks = pkgs.trev.libs.mkChecks {
           node-lint = {
             src = self.packages.${system}.default;
             packages = with pkgs; [
@@ -287,7 +287,7 @@
             root = ./.github;
             files = ./.github/renovate.jsonc;
             packages = with pkgs; [
-              renovate
+              trev.renovate
             ];
             script = ''
               renovate-config-validator renovate.jsonc
@@ -298,7 +298,7 @@
             root = ./.forgejo;
             files = ./.forgejo/renovate.jsonc;
             packages = with pkgs; [
-              renovate
+              trev.renovate
             ];
             script = ''
               renovate-config-validator renovate.jsonc
@@ -309,7 +309,7 @@
             root = ./.gitea;
             files = ./.gitea/renovate.jsonc;
             packages = with pkgs; [
-              renovate
+              trev.renovate
             ];
             script = ''
               renovate-config-validator renovate.jsonc
